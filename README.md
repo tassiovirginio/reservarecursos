@@ -19,6 +19,6 @@ Copyright 2015 - Tássio Guerreiro Antunes Virgínio
 : mvn jetty:run
 
 - Acesso após a instalação:
-: http://127.0.0.1:9999
+: http://127.0.0.1:9997
 login: admin
 senha: admin
