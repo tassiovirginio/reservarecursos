@@ -1,0 +1,75 @@
+<!--
+Copyright 2015 - Tássio Guerreiro Antunes Virgínio
+
+Este arquivo é parte do programa Reserva de Recursos
+
+O Reserva de Recursos é um software livre; você pode redistribui-lo e/ou modifica-lo
+dentro dos termos da Licença Pública Geral GNU como publicada pela
+Fundação do Software Livre (FSF); na versão 2 da Licença.
+
+Este programa é distribuido na esperança que possa ser util, mas SEM
+NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a qualquer
+MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU
+para maiores detalhes.
+
+Você deve ter recebido uma cópia da Licença Pública Geral GNU, sob o
+título "licensa_uso.htm", junto com este programa, se não, escreva para a
+Fundação do Software Livre(FSF) Inc., 51 Franklin St, Fifth Floor,
+-->
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+    <div>
+        <table class="table">
+            <tr>
+                <th>CADASTRAR PERÍODO</th>
+            </tr>
+            <tr>
+                <td>
+                    <form wicket:id="form">
+                        <label>Data Inicial</label>
+                        <input wicket:id="dataInicial" required class="form-control" type="date" placeholder="DD/MM/YYYY" />
+                        <label>Data Final</label>
+                        <input wicket:id="dataFinal" required class="form-control" type="date" placeholder="DD/MM/YYYY" />
+                        <label>Obs</label>
+                        <textarea wicket:id="obs" required class="form-control" ></textarea>
+                        <br>
+                        <input wicket:id="buttonNovo" class="btn btn-primary" type="submit" value="Novo"/>
+                        <input wicket:id="buttonSalvar" class="btn btn-success" type="submit" value="Salvar"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table">
+            <tr>
+                <th>
+                    Data Inicial
+                </th>
+                <th>
+                    Data Final
+                </th>
+                <th>
+                    Observação
+                </th>
+                <th>
+                    Grupo
+                </th>
+                <th>
+                </th>
+            </tr>
+            <tr wicket:id="listaPeriodos">
+                <td wicket:id="dataInicial">
+                </td>
+                <td wicket:id="dataFinal">
+                </td>
+                <td wicket:id="obs">
+                </td>
+                <td wicket:id="grupo">
+                </td>
+                <td>
+                    <a wicket:id="linkEditar" class="btn btn-success btn-xs" href="#">editar</a>
+                    <a wicket:id="linkApagar" class="btn btn-danger btn-xs" href="#">apagar</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</wicket:extend>

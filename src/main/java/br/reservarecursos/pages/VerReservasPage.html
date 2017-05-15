@@ -1,0 +1,76 @@
+<!--
+Copyright 2015 - Tássio Guerreiro Antunes Virgínio
+
+Este arquivo é parte do programa Reserva de Recursos
+
+O Reserva de Recursos é um software livre; você pode redistribui-lo e/ou modifica-lo
+dentro dos termos da Licença Pública Geral GNU como publicada pela
+Fundação do Software Livre (FSF); na versão 2 da Licença.
+
+Este programa é distribuido na esperança que possa ser util, mas SEM
+NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a qualquer
+MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU
+para maiores detalhes.
+
+Você deve ter recebido uma cópia da Licença Pública Geral GNU, sob o
+título "licensa_uso.htm", junto com este programa, se não, escreva para a
+Fundação do Software Livre(FSF) Inc., 51 Franklin St, Fifth Floor,
+-->
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+
+    <table class="table table-bordered" style="background-color: #ffffff; font-size:11px; width: 850px;">
+        <tr>
+            <th colspan="8">FIXO SEMANAL - <label wicket:id="nomeRecurso"></label></th>
+        </tr>
+        <tr>
+            <th style="width: 85px;"></th>
+            <th style="width: 85px;">Segunda</th>
+            <th style="width: 85px;">Terça</th>
+            <th style="width: 85px;">Quarta</th>
+            <th style="width: 85px;">Quinta</th>
+            <th style="width: 85px;">Sexta</th>
+            <th style="width: 85px;">Sabado</th>
+            <th style="width: 85px;">Domingo</th>
+        </tr>
+        <tr wicket:id="horarioSemanaList">
+            <th wicket:id="horario">Horario</th>
+            <th class="alinharBase">
+                <label wicket:id="segunda"></label>
+                <a wicket:id="linkReservar1">Reservar</a>
+                <a class="btn btn-xs btn-danger buttonBase" wicket:id="linkApagar1">Apagar</a>
+            </th>
+            <th class="alinharBase">
+                <label wicket:id="terca"></label>
+                <a wicket:id="linkReservar2">Reservar</a>
+                <a class="btn btn-xs btn-danger buttonBase" wicket:id="linkApagar2">Apagar</a>
+            </th>
+            <th class="alinharBase">
+                <label wicket:id="quarta"></label>
+                <a wicket:id="linkReservar3">Reservar</a>
+                <a class="btn btn-xs btn-danger buttonBase" wicket:id="linkApagar3">Apagar</a>
+            </th>
+            <th class="alinharBase">
+                <label wicket:id="quinta"></label>
+                <a wicket:id="linkReservar4">Reservar</a>
+                <a class="btn btn-xs btn-danger buttonBase" wicket:id="linkApagar4">Apagar</a>
+            </th>
+            <th class="alinharBase">
+                <label wicket:id="sexta"></label>
+                <a wicket:id="linkReservar5">Reservar</a>
+                <a class="btn btn-xs btn-danger buttonBase" wicket:id="linkApagar5">Apagar</a>
+            </th>
+            <th class="alinharBase">
+                <label wicket:id="sabado"></label>
+                <a wicket:id="linkReservar6">Reservar</a>
+                <a class="btn btn-xs btn-danger buttonBase" wicket:id="linkApagar6">Apagar</a>
+            </th>
+            <th class="alinharBase">
+                <label wicket:id="domingo"></label>
+                <a wicket:id="linkReservar7">Reservar</a>
+                <a class="btn btn-xs btn-danger buttonBase" wicket:id="linkApagar7">Apagar</a>
+            </th>
+        </tr>
+    </table>
+
+
+</wicket:extend>

@@ -1,0 +1,26 @@
+Manual de Instalação do Sistema de Reserva de Recursos
+
+Esse manual foi elabora em passos, seguindo de acordo no final terá o sistema rodando.
+
+1 – Primeiramente o sistema tem a necessidade de utilizar da plataforma Java, podendo
+ser o OpenJDK 1.7 ou o Oracle JDK 1.7. Esse tutorial não mostrará como fazer a instalação
+do mesmo, só explicita a sua necessidade.
+
+2 – Será necessário instalar o Apache Maven, que pode ser obtido no site https://maven.apache.org/,
+podendo ser instalada a versão 3 e posteriores. Instruções para sua instalação estão na
+página: https://maven.apache.org/install.html.
+
+3 – Baixe o código fonte do Sistema de Reserva de Recursos, descompacte, na pasta gerada
+pela descompressão execute o seguinte comando:
+
+mvn jetty:run
+
+O sistema irá baixar todas as bibliotecas necessárias a sua execução.
+Após o termino do download e da carga do sistema, acesse do navegador de sua preferencia
+a url: http://127.0.0.1:9999.
+
+Parabéns, o Sistema de Reserva de Recursos esta funcionando, e pode ser acessado pelo
+login de administrador.
+
+Login: admin
+Senha: admin

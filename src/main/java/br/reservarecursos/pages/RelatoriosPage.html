@@ -1,0 +1,27 @@
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+
+    <form wicket:id="form">
+        <input type="date" wicket:id="dataBusca" />
+        <input type="submit" value="buscar" />
+    </form>
+
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>Data</th>
+        <th>Horário</th>
+        <th>Período</th>
+        <th>Recurso</th>
+        <th>Usuário</th>
+    </tr>
+    <tr wicket:id="listaResaervas">
+        <td wicket:id="id"></td>
+        <td wicket:id="data"></td>
+        <td wicket:id="horario"></td>
+        <td wicket:id="periodo"></td>
+        <td wicket:id="ambiente"></td>
+        <td wicket:id="usuario"></td>
+    </tr>
+</table>
+
+</wicket:extend>

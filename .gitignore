@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+target/
+*.bkp.sql
+*.log
+logs
+dependency-reduced-pom.xml
+db/
+reservarecursos.iml
+
+
