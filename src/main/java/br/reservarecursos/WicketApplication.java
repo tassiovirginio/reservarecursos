@@ -63,6 +63,8 @@ public class WicketApplication extends WebApplication {
     private HorarioBusiness horarioBusiness;
     @Autowired
     private RecursoBusiness recursoBusiness;
+    @Autowired
+    private GrupoBusiness grupoBusiness;
 
     @Override
     public Class<MenuPage> getHomePage() {
@@ -114,7 +116,7 @@ public class WicketApplication extends WebApplication {
         mountPage("/grupos/", GrupoPage.class);
 
 
-        if(restLigar)packageScannerSpring.scanPackage(this, "br.edu.ifto.reservarecursos.rest");
+        if(restLigar)packageScannerSpring.scanPackage(this, "br.reservarecursos.rest");
 
         if(dbTeste)dbTeste();
 
@@ -160,6 +162,12 @@ public class WicketApplication extends WebApplication {
                 "***  Iniciando o Banco de Dados de Teste                         ***\n"+
                 "********************************************************************");
 
+
+        Grupo g1 = new Grupo();
+        g1.setNome("Campus TO");
+        g1.setAtivo(true);
+        grupoBusiness.save(g1);
+
         Usuario u1 = new Usuario();
         u1.setEmail("teste@teste.org.br");
         u1.setLogin("teste");
@@ -167,6 +175,7 @@ public class WicketApplication extends WebApplication {
         u1.setSenha("698dc19d489c4e4db73e28a713eab07b");
         u1.setAdmin(true);
         u1.setAdminEmprestimo(false);
+        u1.setGrupo(g1);
         usuarioBusiness.save(u1);
 
         Usuario u2 = new Usuario();
@@ -176,12 +185,14 @@ public class WicketApplication extends WebApplication {
         u2.setSenha("38851536d87701d2191990e24a7f8d4e");
         u2.setAdmin(false);
         u2.setAdminEmprestimo(false);
+        u2.setGrupo(g1);
         usuarioBusiness.save(u2);
 
         Periodo periodo = new Periodo();
         periodo.setDataInicial(new LocalDate().withMonthOfYear(1).withDayOfMonth(1));
         periodo.setDataFinal(new LocalDate().withMonthOfYear(12).withDayOfMonth(30));
         periodo.setObs("Periodo de " + periodo.getDataInicial().getYear() + "/X");
+        periodo.setGrupo(g1);
         periodoBusiness.save(periodo);
 
         Ambiente r1 = new Ambiente();
@@ -189,6 +200,7 @@ public class WicketApplication extends WebApplication {
         r1.setDescricao("30 Computadores - Acesso a Internet");
         r1.setAtivo(true);
         r1.setGerenciavel(false);
+        r1.setGrupo(g1);
         ambienteBusiness.save(r1);
 
         Ambiente r2 = new Ambiente();
@@ -196,6 +208,7 @@ public class WicketApplication extends WebApplication {
         r2.setDescricao("30 Computadores - Acesso a Internet");
         r2.setAtivo(true);
         r2.setGerenciavel(false);
+        r2.setGrupo(g1);
         ambienteBusiness.save(r2);
 
         Ambiente r3 = new Ambiente();
@@ -203,6 +216,7 @@ public class WicketApplication extends WebApplication {
         r3.setDescricao("Teste teste teste");
         r3.setAtivo(true);
         r3.setGerenciavel(false);
+        r3.setGrupo(g1);
         ambienteBusiness.save(r3);
 
         Ambiente r4 = new Ambiente();
@@ -211,6 +225,7 @@ public class WicketApplication extends WebApplication {
         r4.setAtivo(true);
         r4.setGerenciavel(true);
         r4.setGerenciador(u1);
+        r4.setGrupo(g1);
         ambienteBusiness.save(r4);
 
         Horario horario1 = new Horario();
@@ -287,18 +302,21 @@ public class WicketApplication extends WebApplication {
         recurso01.setNome("DataShow 01");
         recurso01.setAtivo(true);
         recurso01.setManutencao(false);
+        recurso01.setGrupo(g1);
         recursoBusiness.save(recurso01);
 
         Recurso recurso02 = new Recurso();
         recurso02.setNome("DataShow 02");
         recurso02.setAtivo(true);
         recurso02.setManutencao(false);
+        recurso02.setGrupo(g1);
         recursoBusiness.save(recurso02);
 
         Recurso recurso03 = new Recurso();
         recurso03.setNome("DataShow 03");
         recurso03.setAtivo(true);
         recurso03.setManutencao(false);
+        recurso03.setGrupo(g1);
         recursoBusiness.save(recurso03);
 
 
