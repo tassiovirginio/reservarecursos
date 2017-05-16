@@ -14,7 +14,7 @@ Copyright 2015 - Tássio Guerreiro Antunes Virgínio
 * Banco de Dados (MySQL, Postgres, Derby entre outros)
 
 3 - Instalarção/Run
-* git clone git@github.com:tassiovirginio/reservarecursos.git
+* git clone https://github.com/tassiovirginio/reservarecursos.git
 * cd reservarecursos
 * mvn jetty:run
 
