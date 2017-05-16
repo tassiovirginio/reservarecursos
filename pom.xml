@@ -432,7 +432,7 @@
 					<stopPort>9999</stopPort>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-							<port>9997</port>
+							<port>8081</port>
 							<maxIdleTime>60000</maxIdleTime>
 						</connector>
 					</connectors>
