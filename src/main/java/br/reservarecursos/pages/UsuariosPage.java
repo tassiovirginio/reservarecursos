@@ -18,7 +18,9 @@
  */
 package br.reservarecursos.pages;
 
+import br.reservarecursos.business.GrupoBusiness;
 import br.reservarecursos.business.UsuarioBusiness;
+import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Usuario;
 import br.reservarecursos.pages.base.BasePage;
 import br.reservarecursos.pages.componentes.AjaxLinkConfirm;
@@ -45,6 +47,10 @@ public class UsuariosPage extends BasePage {
 
     @SpringBean
     private UsuarioBusiness usuarioBusiness;
+
+
+    @SpringBean
+    private GrupoBusiness grupoBusiness;
 
     private String senha;
 
@@ -82,6 +88,12 @@ public class UsuariosPage extends BasePage {
         form.add(new CheckBox("admin", new PropertyModel<Boolean>(usuario, "admin")));
         form.add(new CheckBox("adminEmprestimo", new PropertyModel<Boolean>(usuario, "adminEmprestimo")));
         form.add(new CheckBox("adminGeral", new PropertyModel<Boolean>(usuario, "adminGeral")));
+
+
+        List<Grupo> listaGrupo = grupoBusiness.listAll();
+
+        final DropDownChoice<Grupo> ddcGrupo = new DropDownChoice<Grupo>("grupo",new PropertyModel(usuario, "grupo"),listaGrupo,new ChoiceRenderer<>( "nome", "id" ));
+        form.add(ddcGrupo);
 
 
         Button buttonNovo = new Button("buttonNovo") {

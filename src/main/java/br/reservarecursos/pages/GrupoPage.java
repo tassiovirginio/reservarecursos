@@ -55,7 +55,7 @@ public class GrupoPage extends BasePage {
 
         Form form = new Form("form");
         form.add(new TextField<String>("nome", new PropertyModel<String>(grupo, "nome")).setRequired(true));
-        form.add(new TextField<String>("ldap", new PropertyModel<String>(grupo, "ldap")).setRequired(true));
+        form.add(new TextField<String>("ldap", new PropertyModel<String>(grupo, "ldap")));
         form.add(new CheckBox("ativo", new PropertyModel<Boolean>(grupo, "ativo")));
 
 

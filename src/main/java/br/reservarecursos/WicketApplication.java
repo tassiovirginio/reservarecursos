@@ -111,6 +111,7 @@ public class WicketApplication extends WebApplication {
         mountPage("/reservassemana/", VerReservasSemanaPage.class);
         mountPage("/relatorios/", RelatoriosPage.class);
         mountPage("/gerenciar/", GerenciarPage.class);
+        mountPage("/grupos/", GrupoPage.class);
 
 
         if(restLigar)packageScannerSpring.scanPackage(this, "br.edu.ifto.reservarecursos.rest");
