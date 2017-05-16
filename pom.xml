@@ -427,19 +427,55 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
-					<!-- http://docs.codehaus.org/display/JETTY/Maven+Jetty+Plugin -->
-					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<stopKey>foo</stopKey>
+					<stopPort>9999</stopPort>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
 							<port>9997</port>
 							<maxIdleTime>60000</maxIdleTime>
 						</connector>
 					</connectors>
-					<webAppConfig>
-						<contextPath>/</contextPath>
-					</webAppConfig>
 				</configuration>
+				<executions>
+					<execution>
+						<id>start-jetty</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+						<configuration>
+							<scanIntervalSeconds>0</scanIntervalSeconds>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop-jetty</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
+
+			<!--<plugin>-->
+				<!--<groupId>org.mortbay.jetty</groupId>-->
+				<!--<artifactId>jetty-maven-plugin</artifactId>-->
+				<!--<version>${jetty.version}</version>-->
+				<!--<configuration>-->
+					<!--&lt;!&ndash; http://docs.codehaus.org/display/JETTY/Maven+Jetty+Plugin &ndash;&gt;-->
+					<!--<scanIntervalSeconds>0</scanIntervalSeconds>-->
+					<!--<connectors>-->
+						<!--<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">-->
+							<!--<port>9997</port>-->
+							<!--<maxIdleTime>60000</maxIdleTime>-->
+						<!--</connector>-->
+					<!--</connectors>-->
+					<!--<webAppConfig>-->
+						<!--<contextPath>/</contextPath>-->
+					<!--</webAppConfig>-->
+				<!--</configuration>-->
+			<!--</plugin>-->
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
