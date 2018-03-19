@@ -60,7 +60,7 @@ public class AmbientesPage extends BasePage {
 
         ChoiceRenderer choiceRenderer = new ChoiceRenderer("nome", "id");
         form.add(new DropDownChoice<Usuario>("gerenciador",new PropertyModel<Usuario>(ambiente,"gerenciador")
-                ,listaUsuario,choiceRenderer).setRequired(true));
+                ,listaUsuario,choiceRenderer).setRequired(false));
 
         add(form);
 

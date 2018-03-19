@@ -51,6 +51,9 @@ public class UsuariosPage extends BasePage {
     @SpringBean
     private GrupoBusiness grupoBusiness;
 
+    @SpringBean(name = "ldapAtualizacaoAutomatica")
+    private Boolean ldapAtualizacaoAutomatica;
+
     private String senha;
 
     public UsuariosPage() {
@@ -66,6 +69,14 @@ public class UsuariosPage extends BasePage {
             labelLdap = new Label("labelLdap","LDAP: Desligado");
         }
         add(labelLdap);
+
+        Label labelLdapAtualizador = null;
+        if(ldapAtualizacaoAutomatica) {
+            labelLdapAtualizador = new Label("ldapAtualizacaoAutomatica","Atualizador: Ligado");
+        }else{
+            labelLdapAtualizador = new Label("ldapAtualizacaoAutomatica","Atualizador: Desligado");
+        }
+        add(labelLdapAtualizador);
 
         Link linkImportar = new Link("linkImportar") {
             @Override

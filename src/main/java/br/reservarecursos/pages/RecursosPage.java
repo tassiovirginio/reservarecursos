@@ -91,6 +91,7 @@ public class RecursosPage extends BasePage {
                 final Recurso recurso = item.getModelObject();
                 item.add(new Label("nome", recurso.getNome()));
                 item.add(new Label("ativo", recurso.getAtivo()));
+                item.add(new Label("manutencao", recurso.getManutencao()));
                 if(recurso.getGrupo() != null){
                     item.add(new Label("grupo", recurso.getGrupo().getNome()));
                 }else{
