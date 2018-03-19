@@ -48,18 +48,16 @@ public class UsuariosPage extends BasePage {
     @SpringBean
     private UsuarioBusiness usuarioBusiness;
 
-
     @SpringBean
     private GrupoBusiness grupoBusiness;
 
     private String senha;
 
     public UsuariosPage() {
-        this(new Usuario());
+        this(null);
     }
 
     public UsuariosPage(final Usuario usuario) {
-
 
         Label labelLdap = null;
         if(ldapLigado) {
@@ -89,20 +87,10 @@ public class UsuariosPage extends BasePage {
         form.add(new CheckBox("adminEmprestimo", new PropertyModel<Boolean>(usuario, "adminEmprestimo")));
         form.add(new CheckBox("adminGeral", new PropertyModel<Boolean>(usuario, "adminGeral")));
 
-
-        List<Grupo> listaGrupo = grupoBusiness.listAll();
-
-        final DropDownChoice<Grupo> ddcGrupo = new DropDownChoice<Grupo>("grupo",new PropertyModel(usuario, "grupo"),listaGrupo,new ChoiceRenderer<>( "nome", "id" ));
+        List<Grupo> listaGrupos = grupoBusiness.getGruposAtivos();
+        final DropDownChoice<Grupo> ddcGrupo = new DropDownChoice<Grupo>("grupo",new PropertyModel(usuario, "grupo"),listaGrupos,new ChoiceRenderer<>( "nome", "id" ));
         form.add(ddcGrupo);
 
-
-        Button buttonNovo = new Button("buttonNovo") {
-            @Override
-            public void onSubmit() {
-                setResponsePage(new UsuariosPage(new Usuario()));
-            }
-        };
-        form.add(buttonNovo);
 
         Button buttonSalvar = new Button("buttonSalvar") {
             @Override
@@ -117,8 +105,32 @@ public class UsuariosPage extends BasePage {
         };
         form.add(buttonSalvar);
 
+        Link buttonCancelar = new Link("buttonCancelar") {
+
+            @Override
+            public void onClick() {
+                setResponsePage(new UsuariosPage(null));
+            }
+
+        };
+        form.add(buttonCancelar);
+
 
         add(form);
+
+        Link buttonNovo = new Link("buttonNovo") {
+
+            @Override
+            public void onClick() {
+                setResponsePage(new UsuariosPage(new Usuario()));
+            }
+
+        };
+        add(buttonNovo);
+
+
+        form.setVisible(usuario != null);
+
 
         List<Usuario> listaUsuarios = usuarioBusiness.listAll();
 

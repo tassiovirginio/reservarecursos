@@ -162,162 +162,168 @@ public class WicketApplication extends WebApplication {
                 "***  Iniciando o Banco de Dados de Teste                         ***\n"+
                 "********************************************************************");
 
+        Usuario usuarioTeste = usuarioBusiness.getUsuario("teste");
 
-        Grupo g1 = new Grupo();
-        g1.setNome("Campus TO");
-        g1.setAtivo(true);
-        grupoBusiness.save(g1);
+        if(usuarioTeste == null) {
 
-        Usuario u1 = new Usuario();
-        u1.setEmail("teste@teste.org.br");
-        u1.setLogin("teste");
-        u1.setNome("Teste Teste");
-        u1.setSenha("698dc19d489c4e4db73e28a713eab07b");
-        u1.setAdmin(true);
-        u1.setAdminEmprestimo(false);
-        u1.setGrupo(g1);
-        usuarioBusiness.save(u1);
+            Usuario u1 = new Usuario();
+            u1.setEmail("teste@teste.org.br");
+            u1.setLogin("teste");
+            u1.setNome("Teste Teste");
+            u1.setSenha("698dc19d489c4e4db73e28a713eab07b");
+            u1.setAdmin(true);
+            u1.setAdminEmprestimo(false);
+            usuarioBusiness.save(u1);
 
-        Usuario u2 = new Usuario();
-        u2.setEmail("teste2@teste.org.br");
-        u2.setLogin("teste2");
-        u2.setNome("Teste2 Teste");
-        u2.setSenha("38851536d87701d2191990e24a7f8d4e");
-        u2.setAdmin(false);
-        u2.setAdminEmprestimo(false);
-        u2.setGrupo(g1);
-        usuarioBusiness.save(u2);
+            Usuario u2 = new Usuario();
+            u2.setEmail("teste2@teste.org.br");
+            u2.setLogin("teste2");
+            u2.setNome("Teste2 Teste");
+            u2.setSenha("38851536d87701d2191990e24a7f8d4e");
+            u2.setAdmin(false);
+            u2.setAdminEmprestimo(false);
+            usuarioBusiness.save(u2);
 
-        Periodo periodo = new Periodo();
-        periodo.setDataInicial(new LocalDate().withMonthOfYear(1).withDayOfMonth(1));
-        periodo.setDataFinal(new LocalDate().withMonthOfYear(12).withDayOfMonth(30));
-        periodo.setObs("Periodo de " + periodo.getDataInicial().getYear() + "/X");
-        periodo.setGrupo(g1);
-        periodoBusiness.save(periodo);
+            Grupo grupoDNO = new Grupo();
+            grupoDNO.setAtivo(true);
+            grupoDNO.setLdap("");
+            grupoDNO.setNome("Dianópolis");
+            grupoDNO.setAdministrador(u1);
+            grupoBusiness.save(grupoDNO);
 
-        Ambiente r1 = new Ambiente();
-        r1.setNome("Laboratório de Informática 01");
-        r1.setDescricao("30 Computadores - Acesso a Internet");
-        r1.setAtivo(true);
-        r1.setGerenciavel(false);
-        r1.setGrupo(g1);
-        ambienteBusiness.save(r1);
 
-        Ambiente r2 = new Ambiente();
-        r2.setNome("Laboratório de Informática 02");
-        r2.setDescricao("30 Computadores - Acesso a Internet");
-        r2.setAtivo(true);
-        r2.setGerenciavel(false);
-        r2.setGrupo(g1);
-        ambienteBusiness.save(r2);
+            Periodo periodo = new Periodo();
+            periodo.setDataInicial(new LocalDate().withMonthOfYear(1).withDayOfMonth(1));
+            periodo.setDataFinal(new LocalDate().withMonthOfYear(12).withDayOfMonth(30));
+            periodo.setObs("Periodo de " + periodo.getDataInicial().getYear() + "/X");
+            periodo.setGrupo(grupoDNO);
+            periodoBusiness.save(periodo);
 
-        Ambiente r3 = new Ambiente();
-        r3.setNome("Laboratório 3");
-        r3.setDescricao("Teste teste teste");
-        r3.setAtivo(true);
-        r3.setGerenciavel(false);
-        r3.setGrupo(g1);
-        ambienteBusiness.save(r3);
+            Ambiente r1 = new Ambiente();
+            r1.setNome("Laboratório de Informática 01");
+            r1.setDescricao("30 Computadores - Acesso a Internet");
+            r1.setAtivo(true);
+            r1.setGerenciavel(false);
+            r1.setGrupo(grupoDNO);
+            ambienteBusiness.save(r1);
 
-        Ambiente r4 = new Ambiente();
-        r4.setNome("Auditório");
-        r4.setDescricao("Teste teste teste");
-        r4.setAtivo(true);
-        r4.setGerenciavel(true);
-        r4.setGerenciador(u1);
-        r4.setGrupo(g1);
-        ambienteBusiness.save(r4);
+            Ambiente r2 = new Ambiente();
+            r2.setNome("Laboratório de Informática 02");
+            r2.setDescricao("30 Computadores - Acesso a Internet");
+            r2.setAtivo(true);
+            r2.setGerenciavel(false);
+            r2.setGrupo(grupoDNO);
+            ambienteBusiness.save(r2);
 
-        Horario horario1 = new Horario();
-        horario1.setHoraInicio(new LocalTime(7,30));
-        horario1.setHoraFim(new LocalTime(8,30));
-        horario1.setPeriodo(periodo);
-        horarioBusiness.save(horario1);
+            Ambiente r3 = new Ambiente();
+            r3.setNome("Laboratório 3");
+            r3.setDescricao("Teste teste teste");
+            r3.setAtivo(true);
+            r3.setGerenciavel(false);
+            r3.setGrupo(grupoDNO);
+            ambienteBusiness.save(r3);
 
-        Horario horario2 = new Horario();
-        horario2.setHoraInicio(new LocalTime(8,30));
-        horario2.setHoraFim(new LocalTime(9,30));
-        horario2.setPeriodo(periodo);
-        horarioBusiness.save(horario2);
+            Ambiente r4 = new Ambiente();
+            r4.setNome("Auditório");
+            r4.setDescricao("Teste teste teste");
+            r4.setAtivo(true);
+            r4.setGerenciavel(true);
+            r4.setGerenciador(u1);
+            r4.setGrupo(grupoDNO);
+            ambienteBusiness.save(r4);
 
-        Horario horario3 = new Horario();
-        horario3.setHoraInicio(new LocalTime(10,00));
-        horario3.setHoraFim(new LocalTime(11,00));
-        horario3.setPeriodo(periodo);
-        horarioBusiness.save(horario3);
+            Horario horario1 = new Horario();
+            horario1.setHoraInicio(new LocalTime(7, 30));
+            horario1.setHoraFim(new LocalTime(8, 30));
+            horario1.setPeriodo(periodo);
+            horarioBusiness.save(horario1);
 
-        horarioBusiness.save(new Horario(new LocalTime(11,00), new LocalTime(12,00), periodo));
+            Horario horario2 = new Horario();
+            horario2.setHoraInicio(new LocalTime(8, 30));
+            horario2.setHoraFim(new LocalTime(9, 30));
+            horario2.setPeriodo(periodo);
+            horarioBusiness.save(horario2);
 
-        horarioBusiness.save(new Horario(new LocalTime(13,30), new LocalTime(14,30), periodo));
-        horarioBusiness.save(new Horario(new LocalTime(14,30), new LocalTime(15,30), periodo));
-        horarioBusiness.save(new Horario(new LocalTime(16,00), new LocalTime(17,00), periodo));
-        horarioBusiness.save(new Horario(new LocalTime(17,00), new LocalTime(18,00), periodo));
+            Horario horario3 = new Horario();
+            horario3.setHoraInicio(new LocalTime(10, 00));
+            horario3.setHoraFim(new LocalTime(11, 00));
+            horario3.setPeriodo(periodo);
+            horarioBusiness.save(horario3);
 
-        horarioBusiness.save(new Horario(new LocalTime(18,00), new LocalTime(19,00), periodo));
-        horarioBusiness.save(new Horario(new LocalTime(19,00), new LocalTime(21,00), periodo));
-        horarioBusiness.save(new Horario(new LocalTime(21,00), new LocalTime(23,00), periodo));
+            horarioBusiness.save(new Horario(new LocalTime(11, 00), new LocalTime(12, 00), periodo));
 
-        Reserva reserva1 = new Reserva();
-        reserva1.setObs("Aula 1 Teste");
-        reserva1.setData(LocalDate.now());
-        reserva1.setHorario(horario2);
-        reserva1.setPeriodo(periodo);
-        reserva1.setAmbiente(r1);
-        reserva1.setUsuario(u1);
-        reserva1.setAutorizado(false);
-        reservaBusiness.save(reserva1);
+            horarioBusiness.save(new Horario(new LocalTime(13, 30), new LocalTime(14, 30), periodo));
+            horarioBusiness.save(new Horario(new LocalTime(14, 30), new LocalTime(15, 30), periodo));
+            horarioBusiness.save(new Horario(new LocalTime(16, 00), new LocalTime(17, 00), periodo));
+            horarioBusiness.save(new Horario(new LocalTime(17, 00), new LocalTime(18, 00), periodo));
 
-        //FIXO(Sem Data)
-        Reserva reservaFixo1 = new Reserva();
-        reservaFixo1.setObs("Aula Fixa 1");
-        reservaFixo1.setHorario(horario1);
-        reservaFixo1.setPeriodo(periodo);
-        reservaFixo1.setAmbiente(r2);
-        reservaFixo1.setUsuario(u2);
-        reservaFixo1.setDiaSemana(1);
-        reservaFixo1.setAutorizado(false);
-        reservaBusiness.save(reservaFixo1);
+            horarioBusiness.save(new Horario(new LocalTime(18, 00), new LocalTime(19, 00), periodo));
+            horarioBusiness.save(new Horario(new LocalTime(19, 00), new LocalTime(21, 00), periodo));
+            horarioBusiness.save(new Horario(new LocalTime(21, 00), new LocalTime(23, 00), periodo));
 
-        Reserva reservaFixo2 = new Reserva();
-        reservaFixo2.setObs("Aula Fixa 2");
-        reservaFixo2.setHorario(horario1);
-        reservaFixo2.setPeriodo(periodo);
-        reservaFixo2.setAmbiente(r2);
-        reservaFixo2.setUsuario(u2);
-        reservaFixo2.setDiaSemana(2);
-        reservaFixo2.setAutorizado(false);
-        reservaBusiness.save(reservaFixo2);
+            Reserva reserva1 = new Reserva();
+            reserva1.setObs("Aula 1 Teste");
+            reserva1.setData(LocalDate.now());
+            reserva1.setHorario(horario2);
+            reserva1.setPeriodo(periodo);
+            reserva1.setAmbiente(r1);
+            reserva1.setUsuario(u1);
+            reserva1.setAutorizado(false);
+            reservaBusiness.save(reserva1);
 
-        Reserva reservaFixo3 = new Reserva();
-        reservaFixo3.setObs("Aula Fixa 3");
-        reservaFixo3.setHorario(horario1);
-        reservaFixo3.setPeriodo(periodo);
-        reservaFixo3.setAmbiente(r2);
-        reservaFixo3.setUsuario(u2);
-        reservaFixo3.setDiaSemana(3);
-        reservaFixo3.setAutorizado(false);
-        reservaBusiness.save(reservaFixo3);
+            //FIXO(Sem Data)
+            Reserva reservaFixo1 = new Reserva();
+            reservaFixo1.setObs("Aula Fixa 1");
+            reservaFixo1.setHorario(horario1);
+            reservaFixo1.setPeriodo(periodo);
+            reservaFixo1.setAmbiente(r2);
+            reservaFixo1.setUsuario(u2);
+            reservaFixo1.setDiaSemana(1);
+            reservaFixo1.setAutorizado(false);
+            reservaBusiness.save(reservaFixo1);
 
-        Recurso recurso01 = new Recurso();
-        recurso01.setNome("DataShow 01");
-        recurso01.setAtivo(true);
-        recurso01.setManutencao(false);
-        recurso01.setGrupo(g1);
-        recursoBusiness.save(recurso01);
+            Reserva reservaFixo2 = new Reserva();
+            reservaFixo2.setObs("Aula Fixa 2");
+            reservaFixo2.setHorario(horario1);
+            reservaFixo2.setPeriodo(periodo);
+            reservaFixo2.setAmbiente(r2);
+            reservaFixo2.setUsuario(u2);
+            reservaFixo2.setDiaSemana(2);
+            reservaFixo2.setAutorizado(false);
+            reservaBusiness.save(reservaFixo2);
 
-        Recurso recurso02 = new Recurso();
-        recurso02.setNome("DataShow 02");
-        recurso02.setAtivo(true);
-        recurso02.setManutencao(false);
-        recurso02.setGrupo(g1);
-        recursoBusiness.save(recurso02);
+            Reserva reservaFixo3 = new Reserva();
+            reservaFixo3.setObs("Aula Fixa 3");
+            reservaFixo3.setHorario(horario1);
+            reservaFixo3.setPeriodo(periodo);
+            reservaFixo3.setAmbiente(r2);
+            reservaFixo3.setUsuario(u2);
+            reservaFixo3.setDiaSemana(3);
+            reservaFixo3.setAutorizado(false);
+            reservaBusiness.save(reservaFixo3);
 
-        Recurso recurso03 = new Recurso();
-        recurso03.setNome("DataShow 03");
-        recurso03.setAtivo(true);
-        recurso03.setManutencao(false);
-        recurso03.setGrupo(g1);
-        recursoBusiness.save(recurso03);
+            Recurso recurso01 = new Recurso();
+            recurso01.setNome("DataShow 01");
+            recurso01.setAtivo(true);
+            recurso01.setManutencao(false);
+            recurso01.setGrupo(grupoDNO);
+            recursoBusiness.save(recurso01);
+
+            Recurso recurso02 = new Recurso();
+            recurso02.setNome("DataShow 02");
+            recurso02.setAtivo(true);
+            recurso02.setManutencao(false);
+            recurso02.setGrupo(grupoDNO);
+            recursoBusiness.save(recurso02);
+
+            Recurso recurso03 = new Recurso();
+            recurso03.setNome("DataShow 03");
+            recurso03.setAtivo(true);
+            recurso03.setManutencao(false);
+            recurso03.setGrupo(grupoDNO);
+            recursoBusiness.save(recurso03);
+
+        }
 
 
     }
