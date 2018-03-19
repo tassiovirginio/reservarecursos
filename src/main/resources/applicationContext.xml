@@ -116,6 +116,7 @@
         <constructor-arg value="${ldap.ligado}"/>
     </bean>
 
+
     <ldap:context-source
             url="${ldap.url}"
             base="${ldap.base}"
@@ -126,6 +127,36 @@
 
     <bean id="personRepo" class="br.reservarecursos.ldap.PersonRepo">
         <property name="ldapTemplate" ref="ldapTemplate" />
+    </bean>
+
+    <bean id="ldapAtualizacaoAutomatica" class="java.lang.Boolean">
+        <constructor-arg value="${ldap.atualizacao_automatica}"/>
+    </bean>
+
+    <bean id="atualizador" class="br.reservarecursos.ldap.Atualizador"></bean>
+
+    <bean id="runAtualizador"  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="atualizador" />
+        <property name="targetMethod" value="atualizarUsuarios" />
+    </bean>
+
+    <bean id="minhaTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="runAtualizador"/>
+        <property name="startDelay" value="2000"/>
+        <property name="repeatInterval" value="5000"/>
+    </bean>
+
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="runAtualizador" />
+        <property name="cronExpression" value="0 59 23 * * ?" />
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger" />
+            </list>
+        </property>
     </bean>
 
 </beans>
