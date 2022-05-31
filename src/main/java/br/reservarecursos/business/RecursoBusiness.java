@@ -21,11 +21,9 @@ package br.reservarecursos.business;
 
 import br.reservarecursos.business.daos.RecursoDAO;
 import br.reservarecursos.business.daos.util.BusinessGeneric;
-import br.reservarecursos.entities.Emprestimo;
 import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Recurso;
 import org.hibernate.criterion.Order;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +34,6 @@ import static org.hibernate.criterion.Restrictions.eq;
 /**
  * Created by tassio on 12/01/15.
  */
-
 @Component
 @Transactional
 public class RecursoBusiness extends BusinessGeneric<RecursoDAO, Recurso> {

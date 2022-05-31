@@ -19,13 +19,10 @@
 
 package br.reservarecursos.business;
 
-import br.reservarecursos.business.daos.AmbienteDAO;
 import br.reservarecursos.business.daos.EmprestimoDAO;
 import br.reservarecursos.business.daos.util.BusinessGeneric;
-import br.reservarecursos.entities.Ambiente;
 import br.reservarecursos.entities.Emprestimo;
 import br.reservarecursos.entities.Recurso;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.joda.time.DateTime;
@@ -33,7 +30,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.hibernate.criterion.Restrictions.*;
@@ -41,7 +37,6 @@ import static org.hibernate.criterion.Restrictions.*;
 /**
  * Created by tassio on 12/01/15.
  */
-
 @Component
 @Transactional
 public class EmprestimoBusiness extends BusinessGeneric<EmprestimoDAO, Emprestimo> {

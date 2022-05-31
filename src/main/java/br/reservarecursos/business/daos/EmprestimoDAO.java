@@ -20,7 +20,6 @@
 package br.reservarecursos.business.daos;
 
 import br.reservarecursos.business.daos.util.DAOGeneric;
-import br.reservarecursos.entities.Ambiente;
 import br.reservarecursos.entities.Emprestimo;
 import org.springframework.stereotype.Component;
 
@@ -28,5 +27,4 @@ import org.springframework.stereotype.Component;
  * Created by tassio on 16/01/15.
  */
 @Component
-public class EmprestimoDAO extends DAOGeneric<Emprestimo> {
-}
+public class EmprestimoDAO extends DAOGeneric<Emprestimo> {}

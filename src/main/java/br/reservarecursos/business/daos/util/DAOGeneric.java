@@ -207,7 +207,7 @@ public class DAOGeneric<T> {
         session().createSQLQuery(query).executeUpdate();
     }
 
-    public List executeSQL_List(String sql) {
+    public List<T> executeSQL_List(String sql) {
         SQLQuery q = session().createSQLQuery(sql);
         q.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
         return q.list();

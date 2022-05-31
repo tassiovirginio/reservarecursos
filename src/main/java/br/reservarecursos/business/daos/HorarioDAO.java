@@ -27,5 +27,4 @@ import org.springframework.stereotype.Component;
  * Created by tassio on 16/01/15.
  */
 @Component
-public class HorarioDAO extends DAOGeneric<Horario> {
-}
+public class HorarioDAO extends DAOGeneric<Horario> {}

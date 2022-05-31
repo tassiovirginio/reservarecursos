@@ -28,7 +28,6 @@ import org.joda.time.LocalDate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hibernate.criterion.Restrictions.*;
@@ -36,7 +35,6 @@ import static org.hibernate.criterion.Restrictions.*;
 /**
  * Created by tassio on 12/01/15.
  */
-
 @Component
 @Transactional
 public class PeriodoBusiness extends BusinessGeneric<PeriodoDAO, Periodo> {

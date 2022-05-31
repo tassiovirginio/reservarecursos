@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,7 +42,6 @@ import static org.hibernate.criterion.Restrictions.eq;
 /**
  * Created by tassio on 12/01/15.
  */
-
 @Component
 @Transactional
 public class UsuarioBusiness extends BusinessGeneric<UsuarioDAO, Usuario> {
@@ -122,8 +120,6 @@ public class UsuarioBusiness extends BusinessGeneric<UsuarioDAO, Usuario> {
 
             Set<String> listaGrupos = new HashSet<String>();
 
-            List<Usuario> listaUsuarioSalvar = new ArrayList<Usuario>();
-
             List<Usuario> listaUsuarios = personRepo.getAllPersonNamesToUsurios();
             for (Usuario usuario : listaUsuarios) {
 
@@ -156,8 +152,6 @@ public class UsuarioBusiness extends BusinessGeneric<UsuarioDAO, Usuario> {
                     }
                 }
             }
-
-
 
         }
     }

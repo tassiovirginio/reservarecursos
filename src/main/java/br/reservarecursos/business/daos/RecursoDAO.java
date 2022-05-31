@@ -20,7 +20,6 @@
 package br.reservarecursos.business.daos;
 
 import br.reservarecursos.business.daos.util.DAOGeneric;
-import br.reservarecursos.entities.Ambiente;
 import br.reservarecursos.entities.Recurso;
 import org.springframework.stereotype.Component;
 

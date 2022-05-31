@@ -19,9 +19,6 @@
 
 package br.reservarecursos.business.daos.util;
 
-import br.reservarecursos.entities.Emprestimo;
-import br.reservarecursos.entities.Recurso;
-import org.exolab.castor.types.DateTime;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,13 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
-import static org.hibernate.criterion.Restrictions.*;
-
 /**
  * Created by tassio on 29/11/15.
  */
 @Transactional
-public class BusinessGeneric<T extends DAOGeneric, Y extends Serializable> {
+public class BusinessGeneric<T extends DAOGeneric<Y>, Y extends Serializable> {
 
     @Autowired
     protected T dao;

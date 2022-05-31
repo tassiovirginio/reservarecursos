@@ -36,7 +36,6 @@ import static org.hibernate.criterion.Restrictions.eq;
 /**
  * Created by tassio on 12/01/15.
  */
-
 @Component
 @Transactional
 public class ReservaBusiness extends BusinessGeneric<ReservaDAO, Reserva> {

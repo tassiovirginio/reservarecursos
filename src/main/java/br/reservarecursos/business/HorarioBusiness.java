@@ -24,10 +24,8 @@ import br.reservarecursos.business.daos.util.BusinessGeneric;
 import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Horario;
 import br.reservarecursos.entities.Periodo;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +39,6 @@ import static org.hibernate.criterion.Restrictions.eq;
 /**
  * Created by tassio on 12/01/15.
  */
-
 @Component
 @Transactional
 public class HorarioBusiness extends BusinessGeneric<HorarioDAO, Horario> {

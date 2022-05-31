@@ -21,7 +21,6 @@ package br.reservarecursos.business;
 
 import br.reservarecursos.business.daos.GrupoDAO;
 import br.reservarecursos.business.daos.util.BusinessGeneric;
-import br.reservarecursos.entities.Ambiente;
 import br.reservarecursos.entities.Grupo;
 import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Component;
@@ -34,7 +33,6 @@ import static org.hibernate.criterion.Restrictions.eq;
 /**
  * Created by tassio on 12/01/15.
  */
-
 @Component
 @Transactional
 public class GrupoBusiness extends BusinessGeneric<GrupoDAO, Grupo> {

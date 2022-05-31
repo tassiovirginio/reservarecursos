@@ -27,5 +27,4 @@ import org.springframework.stereotype.Component;
  * Created by tassio on 16/01/15.
  */
 @Component
-public class PeriodoDAO extends DAOGeneric<Periodo> {
-}
+public class PeriodoDAO extends DAOGeneric<Periodo> {}

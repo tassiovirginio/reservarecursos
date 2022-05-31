@@ -20,7 +20,6 @@
 package br.reservarecursos.business.daos;
 
 import br.reservarecursos.business.daos.util.DAOGeneric;
-import br.reservarecursos.entities.Ambiente;
 import br.reservarecursos.entities.Grupo;
 import org.springframework.stereotype.Component;
 
@@ -28,5 +27,4 @@ import org.springframework.stereotype.Component;
  * Created by tassio on 16/01/15.
  */
 @Component
-public class GrupoDAO extends DAOGeneric<Grupo> {
-}
+public class GrupoDAO extends DAOGeneric<Grupo> {}
