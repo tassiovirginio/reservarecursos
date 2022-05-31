@@ -7,5 +7,5 @@ logs
 dependency-reduced-pom.xml
 db/
 reservarecursos.iml
-
+.vscode/
 
