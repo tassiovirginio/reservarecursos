@@ -48,13 +48,39 @@ code {{ background:#eaeef2; padding:2px 5px; border-radius:4px; font-size:12px }
 <div class="sub">Baseline Wicket 6 / Jetty 8 × stack atual Wicket 11 / Jetty 12 · gerado por <code>mise run visual-test</code></div>
 <div class="badge">{verdict} — diferença máxima {s['max_pct']:.3f}%</div></header><main>
 <div class="cards">
-<div class="card"><b>{s['pages']}</b><span>telas comparadas (desktop + mobile)</span></div>
+<div class="card"><b>{s['routes_covered']}/13</b><span>rotas montadas cobertas</span></div>
+<div class="card"><b>{s['pages']}/{s['expected_pages']}</b><span>capturas comparadas por pixel</span></div>
+<div class="card"><b>{s['interactions']}</b><span>testes de interação</span></div>
 <div class="card"><b>{s['avg_pct']:.3f}%</b><span>diferença média de pixels</span></div>
 <div class="card"><b>{s['max_pct']:.3f}%</b><span>diferença máxima</span></div>
 <div class="card"><b>{s['control_pct'] if s['control_pct'] is not None else 'n/a'}{'%' if s['control_pct'] is not None else ''}</b><span>controle negativo (CSP)</span></div>
 <div class="card"><b>{s['old_failed']}/{s['new_failed']}</b><span>requisições HTTP com falha</span></div>
 <div class="card"><b>{s['old_console']}/{s['new_console']}</b><span>erros de console (old/new)</span></div>
 </div>''')
+
+# Cobertura de rotas
+p.append('''<h2>Cobertura de telas (13/13 rotas montadas)</h2>
+<p style="font-size:14px">As 3 páginas de reserva (<code>/reservashoje/</code>,
+<code>/reservasfixas/</code>, <code>/reservassemana/</code>) exigem um
+<code>Ambiente</code> no construtor e não abrem por URL direta: o Playwright
+clica em <code>linkHoje</code>, <code>linkVer</code> e <code>linkSemana</code>
+no <code>MenuPage</code> e captura a página resultante.</p>
+<table><tr><th>#</th><th>Rota / captura</th><th>Como é alcançada</th></tr>''')
+cobertura = [
+    ('01', '/ (home, desktop + mobile)', 'GET direto; 2 viewports, ambos com asserções de CSS'),
+    ('02', '/menu_ambientes/', 'GET direto após login'),
+    ('03', '/ambientes/', 'GET direto'), ('04', '/recursos/', 'GET direto'),
+    ('05', '/horarios/', 'GET direto'), ('06', '/periodos/', 'GET direto'),
+    ('07', '/usuarios/', 'GET direto'), ('08', '/grupos/', 'GET direto'),
+    ('09', '/relatorios/', 'GET direto'), ('10', '/gerenciar/', 'GET direto'),
+    ('11', '/menu_recursos/', 'GET direto'),
+    ('12', '/reservasfixas/', 'clique em <code>linkVer</code>'),
+    ('13', '/reservashoje/', 'clique em <code>linkHoje</code>'),
+    ('14', '/reservassemana/', 'clique em <code>linkSemana</code>'),
+]
+for n, rota, como in cobertura:
+    p.append(f'<tr><td>{n}</td><td>{rota}</td><td>{como}</td></tr>')
+p.append('</table>')
 
 if ctl and s.get('prefix_probe'):
     pp = s['prefix_probe']
@@ -81,6 +107,33 @@ for a in ass:
              f"<td class='{'ok' if same else 'bad'}'>{'IGUAL' if same else 'DIFERENTE'}</td></tr>")
 p.append('</table>')
 
+# Interações: paridade funcional (não comparada por pixel — ModalWindow usa
+# iframe no Wicket 6 e ModalDialog usa div no Wicket 11).
+p.append('<h2>Testes de interação (paridade funcional)</h2>'
+         '<p style="font-size:14px">Executados nas duas stacks; os resultados '
+         'são comparados por <b>valor</b>, não por pixel. As capturas abaixo são '
+         'evidência, não parte do gate de diff.</p>'
+         '<table><tr><th>Interação</th><th>Resultado baseline</th><th>Resultado atual</th><th>Paridade</th></tr>')
+for k, io in R.get('interactions', {}).items():
+    o, n = io.get('old') or {}, io.get('new') or {}
+    def fmt(d):
+        return ', '.join(f'{a}={b!r}' for a, b in d.items() if a != 'file')
+    igual = all(o.get(f) == n.get(f) for f in set(o) | set(n) if f != 'file')
+    p.append(f"<tr><td>{esc(k)}</td><td>{esc(fmt(o))}</td><td>{esc(fmt(n))}</td>"
+             f"<td class='{'ok' if igual else 'bad'}'>{'IGUAL' if igual else 'DIFERENTE'}</td></tr>")
+p.append('</table>')
+p.append(f"<p style='font-size:13px'>Persistência SQLite após cadastro+exclusão: "
+         f"<code>{esc(s['db_old'])}</code> (baseline) / "
+         f"<code>{esc(s['db_new'])}</code> (atual).</p>")
+p.append('<div class="grid">')
+for k, io in R.get('interactions', {}).items():
+    o, n = io.get('old') or {}, io.get('new') or {}
+    if o.get('file') and n.get('file'):
+        p.append(f'''<div class="tile"><h3>{esc(k)}</h3>
+<div class="imgs">{img('shots/'+o['file'])}{img('shots/'+n['file'])}</div>
+<p style="font-size:12px;color:#57606a;margin:6px 0 0">baseline · atual</p></div>''')
+p.append('</div>')
+
 p.append('<h2>Galeria: baseline × atual × diff</h2><div class="grid">')
 for r in rows:
     p.append(f'''<div class="tile"><h3>{esc(r['name'])} — {r['pct']:.3f}% ({r['changed']}/{r['total']} px)</h3>
@@ -91,9 +144,11 @@ p.append('</div>')
 p.append('''<h2>Metodologia</h2><ul style="font-size:14px;line-height:1.7">
 <li>Dois checkouts isolados via <code>git archive</code> em <code>target/visual-tests/</code>: baseline (<code>VISUAL_BASE_REF</code>, padrão <code>4788022</code>) e atual (<code>VISUAL_CURRENT_REF</code>, padrão <code>HEAD</code>; use <code>WORKTREE</code> para testar alterações não commitadas).</li>
 <li>Cada um sobe com banco SQLite zerado e dado de teste equalizado (<code>grupo_id</code>), na porta <code>VISUAL_PORT</code> (padrão 18081), para não conflitar com o dev server.</li>
-<li>Chromium headless via <code>playwright-core</code>: 1440×900 desktop e 390×844 mobile, <code>networkidle</code>, login automatizado <code>admin/admin</code>, 11 rotas.</li>
-<li>Coleta: HTTP ≥ 400, erros de console/página, <code>document.styleSheets</code> (detecta CSP bloqueando CSS) e estilos computados.</li>
-<li>Diff de pixels (Pillow, limiar 24 por canal) + <b>exit code não-zero</b> se qualquer tela divergir, alguma asserção de CSS mudar ou surgirem erros novos — pronto para CI.</li>
+<li>Chromium headless via <code>playwright-core</code>: 1440×900 desktop e 390×844 mobile, <code>networkidle</code>, login automatizado <code>admin/admin</code>; <b>13/13 rotas montadas</b> (as 3 de reserva por clique em links do MenuPage).</li>
+<li>Coleta: HTTP ≥ 400, erros de console/página, <code>document.styleSheets</code> (detecta CSP bloqueando CSS) e estilos computados — <b>em todas as telas, inclusive mobile</b>.</li>
+<li><b>Interações</b>: login inválido (feedback), cadastro de ambiente (formulário + linha visível + contagem no SQLite), exclusão com <code>confirm()</code> e abertura de modal por AJAX. Resultados comparados por valor entre as stacks.</li>
+<li><code>db_snapshot.py</code> anexa a contagem de linhas do SQLite ao <code>meta.json</code> após as interações; o gate exige bancos idênticos.</li>
+<li>Gates: <b>HTTP 200 explícito</b> em toda tela, 4 folhas base carregadas e nenhuma bloqueada, diff de pixels (Pillow, limiar 24), paridade das interações e <b>exit code não-zero</b> em qualquer divergência — pronto para CI.</li>
 </ul>
 <h2>Reproduzir</h2><pre style="background:#fff;border:1px solid #d8dee4;padding:14px;border-radius:8px;font-size:12px;overflow:auto"><code>
 mise run visual-test                         # baseline x HEAD

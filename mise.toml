@@ -10,6 +10,10 @@ run = "mvn -B test-compile"
 description = "Sobe a aplicação em http://127.0.0.1:8081 (login admin / senha admin)"
 run = "mvn -B jetty:run"
 
+[tasks.test]
+description = "Suite JUnit de integração (DAOGeneric, PeriodoBusiness, UsuarioBusiness)"
+run = "mvn -B test"
+
 [tasks.visual-test]
-description = "Bateria de testes visuais: baseline Wicket 6 x stack atual (relatório em target/visual-tests/)"
+description = "Bateria de testes visuais: 13/13 rotas + interações (relatório em target/visual-tests/)"
 run = "bash tests/visual/run.sh"

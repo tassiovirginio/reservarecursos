@@ -16,45 +16,29 @@ Você deve ter recebido uma cópia da Licença Pública Geral GNU, sob o
 título "licensa_uso.htm", junto com este programa, se não, escreva para a
 Fundação do Software Livre(FSF) Inc., 51 Franklin St, Fifth Floor,
 -->
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html xmlns:wicket="http://wicket.apache.org">
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="stylesheet" href="bootstrap-3.3.5-dist/css/bootstrap.min.css" type="text/css" title="Stylesheet"/>
-    <link rel="stylesheet" href="bootstrap-3.3.5-dist/css/bootstrap-theme.min.css" type="text/css" title="Stylesheet"/>
-    <link rel="stylesheet" href="css/dashboard.css" type="text/css" title="Stylesheet"/>
-    <meta charset="utf-8"/>
-    <title></title>
-    <link rel="shortcut icon" href="imgs/favicon_admin.ico"/>
-</head>
-<body>
-
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Emprestimo de Recurso</a>
+<!-- Conteúdo do ModalDialog (Wicket 11): Panel, não Page em iframe. -->
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Emprestimo de Recurso</a>
+            </div>
         </div>
-    </div>
-</nav>
-<br><br><br>
+    </nav>
+    <br><br><br>
 
-<table class="table" style="font-size: 12px;">
-    <tr>
-        <th>Usuário</th>
-        <th>Data Inicio</th>
-        <th>Data Fim</th>
-        <th>Tempo(m)</th>
-    </tr>
-    <tr wicket:id="listaEmprestimos">
-        <td wicket:id="usuario"></td>
-        <td wicket:id="dataInicio"></td>
-        <td wicket:id="dataFim"></td>
-        <td wicket:id="tempo"></td>
-    </tr>
-</table>
-</body>
-</html>
+    <table class="table" style="font-size: 12px;">
+        <tr>
+            <th>Usuário</th>
+            <th>Data Inicio</th>
+            <th>Data Fim</th>
+            <th>Tempo(m)</th>
+        </tr>
+        <tr wicket:id="listaEmprestimos">
+            <td wicket:id="usuario"></td>
+            <td wicket:id="dataInicio"></td>
+            <td wicket:id="dataFim"></td>
+            <td wicket:id="tempo"></td>
+        </tr>
+    </table>
+</wicket:panel>

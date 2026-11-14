@@ -25,6 +25,13 @@ public final class Filtros implements Serializable {
     }
 
     public static Filtro eq(String propriedade, Object valor) {
+        // cb.equal(path, null) gera "coluna = ?" com parâmetro nulo no Hibernate,
+        // que nunca casa (e, dentro de not(), vira "coluna <> ?"). O antigo
+        // Restrictions.eq(..., null) do Hibernate 4 gerava "is null". Preservamos
+        // essa semântica: é usado em PeriodoBusiness.save com id de entidade nova.
+        if (valor == null) {
+            return (cb, root) -> cb.isNull(path(root, propriedade));
+        }
         return (cb, root) -> cb.equal(path(root, propriedade), valor);
     }
 

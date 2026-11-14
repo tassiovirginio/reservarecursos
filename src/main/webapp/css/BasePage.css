@@ -180,3 +180,38 @@ body {
     vertical-align: bottom !important;
 }
 
+/* Substituto do CSS do ModalWindow/Kendo (removido na migração para Wicket 11).
+   O ModalDialog do Wicket 9+ entrega só a estrutura: a aplicação precisa
+   estilizar .modal-dialog-overlay / .modal-dialog. O overlay fica invisível
+   até open(), então isto não altera nenhuma tela em repouso. */
+.modal-dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1050;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 16px 16px;
+    overflow: auto;
+}
+
+.modal-dialog {
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+    width: auto;
+    max-width: 760px;
+    min-width: 360px;
+}
+
+.modal-dialog-content {
+    padding: 0 15px 15px;
+}
+
+.modal-dialog .navbar {
+    position: static;
+    margin-bottom: 12px;
+    border-radius: 6px 6px 0 0;
+}
+

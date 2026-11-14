@@ -16,42 +16,26 @@ Você deve ter recebido uma cópia da Licença Pública Geral GNU, sob o
 título "licensa_uso.htm", junto com este programa, se não, escreva para a
 Fundação do Software Livre(FSF) Inc., 51 Franklin St, Fifth Floor,
 -->
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html xmlns:wicket="http://wicket.apache.org">
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="stylesheet" href="bootstrap-3.3.5-dist/css/bootstrap.min.css" type="text/css" title="Stylesheet"/>
-    <link rel="stylesheet" href="bootstrap-3.3.5-dist/css/bootstrap-theme.min.css" type="text/css" title="Stylesheet"/>
-    <link rel="stylesheet" href="css/dashboard.css" type="text/css" title="Stylesheet"/>
-    <meta charset="utf-8"/>
-    <title></title>
-    <link rel="shortcut icon" href="imgs/favicon_admin.ico"/>
-</head>
-<body>
-
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Reservar Recurso</a>
+<!-- Conteúdo do ModalDialog (Wicket 11): Panel, não Page em iframe. -->
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Reservar Recurso</a>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<form wicket:id="form">
-    Recurso: <label wicket:id="ambiente" >Teste</label><br>
-    Horário: <label wicket:id="horario">Teste</label><br>
-    Data: <label wicket:id="data">Teste</label><br>
-    <label wicket:id="diaSemanaLabel"> Dia da Semana: </label><label wicket:id="diaSemana">Teste</label><br>
-    Objetivo:<textarea required  wicket:id="objetivo" rows="2" style="width: 100%" /><br>
-    <div wicket:id="msgCheckBox" style="background-color: darkred; color: white; font-size: 12px;">
-        <input required  type="checkbox" wicket:id="urgencia"  />Tenho ciência que as reservas em caráter de urgência não são passíveis de quaisquer reclamações conforme regulamento dos laboratórios.
-    </div>
-    <br>
-    <input wicket:id="save" type="submit" value="salvar" />
-</form>
-</body>
-</html>
+    <form wicket:id="form">
+        Recurso: <label wicket:id="ambiente" >Teste</label><br>
+        Horário: <label wicket:id="horario">Teste</label><br>
+        Data: <label wicket:id="data">Teste</label><br>
+        <label wicket:id="diaSemanaLabel"> Dia da Semana: </label><label wicket:id="diaSemana">Teste</label><br>
+        Objetivo:<textarea required  wicket:id="objetivo" rows="2" style="width: 100%" /><br>
+        <div wicket:id="msgCheckBox" style="background-color: darkred; color: white; font-size: 12px;">
+            <input required  type="checkbox" wicket:id="urgencia"  />Tenho ciência que as reservas em caráter de urgência não são passíveis de quaisquer reclamações conforme regulamento dos laboratórios.
+        </div>
+        <br>
+        <input wicket:id="save" type="submit" value="salvar" />
+    </form>
+</wicket:panel>

@@ -32,6 +32,10 @@ trap 'stop_server' EXIT
 
 # ---------- pré-requisitos ----------
 mkdir -p "$SHOTS"
+# Evita que um controle negativo de execução anterior seja reaproveitado.
+if [ "$CONTROL" != "1" ]; then
+  rm -f "$SHOTS"/control__* 2>/dev/null || true
+fi
 if ss -tlnp 2>/dev/null | grep -q ":$PORT "; then
   log "ERRO: porta $PORT em uso. Pare o servidor ou use VISUAL_PORT=outro."; exit 2
 fi
@@ -104,6 +108,8 @@ run_stack() {
   local dir="$1" name="$2"; shift 2
   start_server "$dir" "$name"
   VISUAL_CHROME_PATH="$CHROME" node "$HARNESS/capture.mjs" "$name" "$SHOTS" "$BASE_URL" "$@"
+  # Captura o estado do banco DEPOIS das interações (cadastro/exclusão).
+  python3 "$HARNESS/db_snapshot.py" "$SHOTS/${name}__meta.json" "$dir/recursos.db"
   stop_server
 }
 

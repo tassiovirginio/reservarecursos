@@ -54,12 +54,27 @@ Hibernate 4.3, Jetty 8, Java 7/11) por versões GA de 2026.
 `mvn -B jetty:run` → Jetty 12.1.15 na porta 8081; login `admin/admin` e
 10 páginas HTTP 200 com banco novo, sem erros no log.
 
-**Regressão visual versionada:** `mise run visual-test` compara 12 telas
-(11 desktop + 1 mobile) da stack antiga com a atual via Chromium headless e
-falha com exit 1 se houver diferença de pixels, CSS bloqueado ou novos erros.
-Documentação e opções em `tests/visual/README.md`. Primeira execução:
-0,000% de diferença (PNGs idênticos); o controle negativo com CSP bloqueante
-(`VISUAL_CONTROL=1`) acusa 84,259%.
+**Testes automatizados (versionados):**
+- `mise run test` — 6 testes JUnit de integração: `DAOGeneric` (CRUD, filtros,
+  ordem, paths aninhados, converters Joda), `PeriodoBusiness` (regra de
+  interseção) e `UsuarioBusiness` (login por MD5), com SessionFactory SQLite real.
+- `mise run visual-test` — **13/13 rotas montadas**, 15 capturas (desktop +
+  mobile), 4 interações (login inválido, cadastro, exclusão com confirmação,
+  abertura de modal) e verificação de persistência no SQLite. Compara com a
+  stack antiga via Chromium headless e falha com exit 1 em qualquer divergência.
+  Documentação completa em `tests/visual/README.md`.
+
+Resultado: 0,000% de diferença em todas as telas; controle negativo com CSP
+bloqueante (`VISUAL_CONTROL=1`) acusa 84,259%.
+
+**Bugs reais que os novos testes encontraram e corrigiram:**
+1. `Filtros.eq("id", null)` gerava `id <> NULL`, anulando a validação de
+   interseção de períodos → agora usa `cb.isNull`.
+2. Os 3 HTMLs de modal ainda eram páginas completas embora as classes tenham
+   virado `Panel` → `MarkupNotFoundException` ao abrir; convertidos para
+   `<wicket:panel>`.
+3. O `ModalDialog` do Wicket 11 não traz CSS (antes vinha do Kendo) → conteúdo
+   inline; adicionado CSS em `css/BasePage.css`.
 
 Com o `recursos.db` já versionado, `/ambientes/` e `/horarios/` retornam 500
 porque o usuário `admin` desse banco está com `grupo_id = NULL` — comportamento

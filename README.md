@@ -36,3 +36,10 @@ Copyright 2015 - Tássio Guerreiro Antunes Virgínio
 
 O servidor é o Jetty 12 na porta 8081 (configurada no `pom.xml`).
 Para parar: Ctrl+C, ou `mvn jetty:stop` em outro terminal.
+
+6 - Testes automatizados
+* `mise run test` — 6 testes JUnit de integração (DAO, regras de negócio,
+  converters Joda-Time) com SessionFactory SQLite real.
+* `mise run visual-test` — 13/13 rotas, 15 capturas e 4 interações comparadas
+  com a stack antiga (Wicket 6); falha com exit 1 em regressão. Detalhes em
+  `tests/visual/README.md`.
