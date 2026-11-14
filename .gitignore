@@ -12,3 +12,7 @@ recursos.db
 
 # dependências do harness de testes visuais (saídas ficam em target/)
 tests/visual/node_modules/
+
+# caches do harness de testes visuais
+__pycache__/
+*.pyc
