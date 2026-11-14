@@ -22,14 +22,14 @@ import br.reservarecursos.entities.Recurso;
 import br.reservarecursos.entities.Usuario;
 import br.reservarecursos.pages.MenuRecursosPage;
 import br.reservarecursos.pages.base.BasePage;
-import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalDialog;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Created by tassio on 03/12/15.
  */
-public class HistoricoModal extends ModalWindow {
+public class HistoricoModal extends ModalBase {
 
     public HistoricoModal(String id, final Recurso recurso, final BasePage page) {
         super(id);
@@ -38,11 +38,11 @@ public class HistoricoModal extends ModalWindow {
         setAutoSize(true);
         setMinimalWidth(500);
         setMinimalHeight(310);
-        setCssClassName(ModalWindow.CSS_CLASS_GRAY);
+        setCssClassName(ModalBase.CSS_CLASS_GRAY);
         setPageCreator(new PageCreator() {
             @Override
-            public Page createPage() {
-                return new HistoricoModalPage(recurso, HistoricoModal.this);
+            public Panel createContent() {
+                return new HistoricoModalPage(ModalDialog.CONTENT_ID, recurso, HistoricoModal.this);
             }
         });
         setWindowClosedCallback(new WindowClosedCallback() {

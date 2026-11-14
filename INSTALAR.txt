@@ -2,12 +2,11 @@ Manual de Instalação do Sistema de Reserva de Recursos
 
 Esse manual foi elabora em passos, seguindo de acordo no final terá o sistema rodando.
 
-1 – Primeiramente o sistema tem a necessidade de utilizar da plataforma Java,
-na versão 11 (OpenJDK 11 ou equivalente). O pom.xml compila com -source 1.7,
-que não é aceito pelo JDK 21, e as bibliotecas antigas (Hibernate 4 / javassist)
-não funcionam no JDK 17 ou superior. O arquivo mise.toml do projeto já fixa o
-Java 11 e o Maven 3.10.0; com o mise (https://mise.jdx.dev) instalado, basta
-rodar "mise install" dentro da pasta do projeto.
+1 – O sistema precisa da plataforma Java na versão 21 (OpenJDK 21 ou equivalente).
+O pom.xml usa maven.compiler.release=21 e a stack atual (Wicket 11, Spring 7,
+Hibernate 7, Jetty 12) exige Jakarta EE / Java 21. O arquivo mise.toml do projeto
+já fixa o Java 21 e o Maven 3.10.0; com o mise (https://mise.jdx.dev) instalado,
+basta rodar "mise install" dentro da pasta do projeto.
 
 2 – Será necessário o Apache Maven 3.x, que pode ser obtido no site
 https://maven.apache.org/, podendo ser instalada a versão 3 e posteriores.
@@ -21,7 +20,8 @@ mvn jetty:run
 
 (ou "mise run", que usa a task start com o Java e o Maven corretos).
 
-O sistema irá baixar todas as bibliotecas necessárias a sua execução.
+O sistema irá baixar todas as bibliotecas necessárias a sua execução e criar o
+banco SQLite (recursos.db) com os dados de teste na primeira execução.
 Após o termino do download e da carga do sistema, acesse do navegador de sua
 preferencia a url: http://127.0.0.1:8081.
 

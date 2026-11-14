@@ -22,13 +22,13 @@ package br.reservarecursos.business;
 import br.reservarecursos.business.daos.GrupoDAO;
 import br.reservarecursos.business.daos.util.BusinessGeneric;
 import br.reservarecursos.entities.Grupo;
-import org.hibernate.criterion.Order;
+import br.reservarecursos.business.daos.util.Ordem;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.hibernate.criterion.Restrictions.eq;
+import static br.reservarecursos.business.daos.util.Filtros.*;
 
 /**
  * Created by tassio on 12/01/15.
@@ -38,7 +38,7 @@ import static org.hibernate.criterion.Restrictions.eq;
 public class GrupoBusiness extends BusinessGeneric<GrupoDAO, Grupo> {
 
     public List<Grupo> getGruposAtivos() {
-        return dao.findByCriteria(Order.asc("nome"), eq("ativo", Boolean.TRUE));
+        return dao.findByCriteria(Ordem.asc("nome"), eq("ativo", Boolean.TRUE));
     }
 
     public Grupo getGrupo(String ldapName) {

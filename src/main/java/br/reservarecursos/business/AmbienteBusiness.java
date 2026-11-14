@@ -24,13 +24,13 @@ import br.reservarecursos.business.daos.util.BusinessGeneric;
 import br.reservarecursos.entities.Ambiente;
 import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Usuario;
-import org.hibernate.criterion.Order;
+import br.reservarecursos.business.daos.util.Ordem;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.hibernate.criterion.Restrictions.eq;
+import static br.reservarecursos.business.daos.util.Filtros.*;
 
 /**
  * Created by tassio on 12/01/15.
@@ -46,34 +46,34 @@ public class AmbienteBusiness extends BusinessGeneric<AmbienteDAO, Ambiente> {
     }
 
     public List<Ambiente> getAll(Grupo grupo) {
-        return dao.findByCriteria(Order.asc("descricao"),
+        return dao.findByCriteria(Ordem.asc("descricao"),
                 eq("grupo", grupo)
         );
     }
 
     public List<Ambiente> getListaAmbientesAtivos(Grupo grupo) {
-        return dao.findByCriteria(Order.asc("descricao"),
+        return dao.findByCriteria(Ordem.asc("descricao"),
                 eq("grupo", grupo),
                 eq("ativo", Boolean.TRUE)
         );
     }
 
     public List<Ambiente> getListaAmbientesAtivosGerenciaveis(Grupo grupo) {
-        return dao.findByCriteria(Order.asc("descricao"),
+        return dao.findByCriteria(Ordem.asc("descricao"),
                 eq("ativo", Boolean.TRUE),
                 eq("grupo", grupo),
                 eq("gerenciavel", Boolean.TRUE));
     }
 
     public List<Ambiente> getListaAmbientesAtivosGerenciaveis(Usuario usuario, Grupo grupo) {
-        return dao.findByCriteria(Order.asc("descricao"),
+        return dao.findByCriteria(Ordem.asc("descricao"),
                 eq("grupo", grupo),
                 eq("ativo", Boolean.TRUE),
                 eq("gerenciador.id", usuario.getId()), eq("gerenciavel", Boolean.TRUE));
     }
 
     public List<Ambiente> getListaAmbientesAtivosNaoGerenciaveis(Grupo grupo) {
-        return dao.findByCriteria(Order.asc("descricao"),
+        return dao.findByCriteria(Ordem.asc("descricao"),
                 eq("grupo", grupo),
                 eq("ativo", Boolean.TRUE),
                 eq("gerenciavel", Boolean.FALSE));

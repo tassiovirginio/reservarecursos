@@ -19,7 +19,7 @@
 
 package br.reservarecursos.pages.componentes;
 
-import com.googlecode.wicket.jquery.ui.markup.html.link.AjaxLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;

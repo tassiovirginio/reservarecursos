@@ -20,7 +20,9 @@ package br.reservarecursos.entities;
 
 import org.joda.time.LocalDate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import jakarta.persistence.Convert;
+import br.reservarecursos.entities.converter.*;
 import java.io.Serializable;
 
 /**
@@ -32,7 +34,7 @@ public class Reserva implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -49,6 +51,7 @@ public class Reserva implements Serializable {
 
     private String obs;
 
+    @Convert(converter = JodaLocalDateConverter.class)
     private LocalDate data;
 
     private Integer diaSemana;

@@ -1,43 +1,28 @@
-/**
- * Copyright 2015 - Tássio Guerreiro Antunes Virgínio
- *
- * Este arquivo é parte do programa Reserva de Recursos
- *
- * O Reserva de Recursos é um software livre; você pode redistribui-lo e/ou modifica-lo
- * dentro dos termos da Licença Pública Geral GNU como publicada pela
- * Fundação do Software Livre (FSF); na versão 2 da Licença.
- *
- * Este programa é distribuido na esperança que possa ser util, mas SEM
- * NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a qualquer
- * MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU
- * para maiores detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral GNU, sob o
- * título "licensa_uso.htm", junto com este programa, se não, escreva para a
- * Fundação do Software Livre(FSF) Inc., 51 Franklin St, Fifth Floor,
- */
-
 package br.reservarecursos.business.daos.util;
 
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.ParameterizedType;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * DAO genérico migrado para JPA Criteria (Hibernate 7).
+ * O antigo org.hibernate.criterion.Criterion/Order/Projections foi removido no
+ * Hibernate 6; os filtros e ordenações agora são os tipos Filtro/Ordem.
+ */
 @SuppressWarnings("unchecked")
 public class DAOGeneric<T> {
 
     @Autowired
     private SessionFactory sessionFactory;
-    private Class<T> persistentClass;
+    private final Class<T> persistentClass;
 
     public DAOGeneric() {
         this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -56,160 +41,142 @@ public class DAOGeneric<T> {
     }
 
     public void delete(T entity) {
-        session().delete(entity);
+        session().remove(session().contains(entity) ? entity : session().merge(entity));
     }
 
     public void delete(Long id) {
-        String hql = "delete " + clazz().getSimpleName() + " where id = :id";
-        Query q = session().createQuery(hql).setParameter("id", id);
-        q.executeUpdate();
+        session().createMutationQuery("delete from " + clazz().getSimpleName() + " where id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 
     public T findById(Long id) {
-        return (T) session().get(clazz(), id);
+        return session().find(clazz(), id);
     }
 
     public List<T> listAll() {
-        return findByHQL("FROM " + clazz().getSimpleName());
+        return findByHQL("from " + clazz().getSimpleName());
     }
 
     public int size() {
-        Criteria crit = session().createCriteria(clazz());
-        crit.setProjection(Projections.rowCount());
-        Object result = crit.uniqueResult();
-        Long size = (Long) result;
-        return size.intValue();
+        CriteriaBuilder cb = session().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        cq.select(cb.count(cq.from(clazz())));
+        return session().createQuery(cq).getSingleResult().intValue();
     }
 
     public T save(T entity) {
-        session().saveOrUpdate(entity);
+        // Equivale ao antigo saveOrUpdate: para entidade nova usa persist(), que
+        // atribui o id gerado ao PRÓPRIO objeto (merge() devolve outra instância e
+        // deixaria referências @ManyToOne apontando para um objeto transitório).
+        Object id = session().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
+        if (id == null) {
+            session().persist(entity);
+        } else {
+            session().merge(entity);
+        }
         return entity;
     }
 
-    public List<T> findByCriteriaReturnList(Criterion... criterion) {
-        return findByCriteria(null, criterion);
+    public List<T> findByCriteriaReturnList(Filtro... filtros) {
+        return findByCriteria(null, filtros);
     }
 
-    public T findByCriteriaReturnUniqueResult(Criterion... criterion) {
-        return findByCriteriaReturnUniqueResult(null, criterion);
+    public T findByCriteriaReturnUniqueResult(Filtro... filtros) {
+        return firstOrNull(findByCriteria(null, filtros));
     }
 
-    public List<T> findByCriteria(Order order, Criterion... criterion) {
-        Criteria crit = session().createCriteria(clazz());
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        for (Criterion c : criterion) {
-            crit.add(c);
-        }
-        if (order != null) {
-            crit.addOrder(order);
-        }
-        return crit.list();
+    public List<T> findByCriteria(Ordem ordem, Filtro... filtros) {
+        return executar(ordem == null ? null : java.util.Collections.singletonList(ordem),
+                java.util.Arrays.asList(filtros), -1, -1);
     }
 
-    public List<T> findByCriteria(List<Order> orders, List<Criterion> criterion, int maxResult) {
-        Criteria crit = session().createCriteria(clazz());
-
-        crit.setMaxResults(maxResult);
-
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        for (Criterion c : criterion) {
-            crit.add(c);
-        }
-        for (Order o : orders) {
-            crit.addOrder(o);
-        }
-        return crit.list();
+    public List<T> findByCriteria(List<Ordem> ordens, List<Filtro> filtros) {
+        return executar(ordens, filtros, -1, -1);
     }
 
-    public List<T> findByCriteria2(List<Order> orders, List<Criterion> criterion, Map<String, String> alias) {
-        Criteria crit = session().createCriteria(clazz());
-
-        if (alias != null) {
-            for (Map.Entry<String, String> entry : alias.entrySet()) {
-                crit.createAlias(entry.getKey(), entry.getValue());
-            }
-        }
-
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        for (Criterion c : criterion) {
-            crit.add(c);
-        }
-        for (Order o : orders) {
-            crit.addOrder(o);
-        }
-        return crit.list();
+    public List<T> findByCriteria(List<Ordem> ordens, List<Filtro> filtros, int maxResult) {
+        return executar(ordens, filtros, -1, maxResult);
     }
 
-    public T findByCriteriaReturnUniqueResult(Order order, Criterion... criterion) {
-        Criteria crit = session().createCriteria(clazz());
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        for (Criterion c : criterion) {
-            crit.add(c);
-        }
-        if (order != null) {
-            crit.addOrder(order);
-        }
-        return (T) crit.uniqueResult();
+    public T findByCriteriaReturnUniqueResult(Ordem ordem, Filtro... filtros) {
+        return firstOrNull(findByCriteria(ordem, filtros));
     }
 
-    public T findByCriteriaReturnUniqueResult(Order order, int offSet, int size, Criterion... criterion) {
-        Criteria crit = session().createCriteria(clazz());
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        crit.setFirstResult(offSet);
-        crit.setMaxResults(size);
-        for (Criterion c : criterion) {
-            crit.add(c);
-        }
-        if (order != null) {
-            crit.addOrder(order);
-        }
-        return (T) crit.uniqueResult();
+    public T findByCriteriaReturnUniqueResult(Ordem ordem, int offSet, int size, Filtro... filtros) {
+        return firstOrNull(executar(java.util.Collections.singletonList(ordem),
+                java.util.Arrays.asList(filtros), offSet, size));
     }
 
-    public List<T> findByCriteria(Order order) {
-        Criteria crit = session().createCriteria(clazz());
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        if (order != null) {
-            crit.addOrder(order);
-        }
-        return crit.list();
+    public List<T> findByCriteria(Ordem ordem) {
+        return findByCriteria(ordem, new Filtro[0]);
     }
 
-    public List<T> findByCriteria(Order order, int offSet, int size) {
-        Criteria crit = session().createCriteria(clazz());
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        crit.setFirstResult(offSet);
-        crit.setMaxResults(size);
-        if (order != null) {
-            crit.addOrder(order);
-        }
-        return crit.list();
+    public List<T> findByCriteria(Ordem ordem, int offSet, int size) {
+        return executar(java.util.Collections.singletonList(ordem),
+                java.util.Collections.<Filtro>emptyList(), offSet, size);
     }
 
-    public List<T> findByHQL(Order order, int offSet, int size) {
-        Query query = session().createQuery("FROM " + clazz().getSimpleName() + " order by " + order.getPropertyName());
-        query.setFirstResult(offSet);
-        query.setMaxResults(size);
-        return query.list();
+    public List<T> findByHQL(Ordem ordem, int offSet, int size) {
+        return session().createQuery("from " + clazz().getSimpleName()
+                        + " order by " + ordem.getPropertyName(), clazz())
+                .setFirstResult(offSet)
+                .setMaxResults(size)
+                .getResultList();
     }
 
     public List<T> findByHQL(String hql) {
-        Query query = session().createQuery(hql);
-        return query.list();
+        return session().createQuery(hql, clazz()).getResultList();
     }
 
     public T findByHQLUniqueResult(String hql) {
-        Query query = session().createQuery(hql);
-        return (T) query.uniqueResult();
+        return firstOrNull(session().createQuery(hql, clazz()).getResultList());
     }
 
     public void executeSQL(String query) {
-        session().createSQLQuery(query).executeUpdate();
+        session().doWork(connection -> {
+            try (Statement st = connection.createStatement()) {
+                st.executeUpdate(query);
+            }
+        });
     }
 
     public List<T> executeSQL_List(String sql) {
-        SQLQuery q = session().createSQLQuery(sql);
-        q.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-        return q.list();
+        return session().createNativeQuery(sql).getResultList();
+    }
+
+    private List<T> executar(List<Ordem> ordens, List<Filtro> filtros, int offSet, int maxResult) {
+        CriteriaBuilder cb = session().getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery(clazz());
+        Root<T> root = cq.from(clazz());
+        cq.select(root).distinct(true);
+
+        if (filtros != null && !filtros.isEmpty()) {
+            List<Predicate> predicados = new ArrayList<>();
+            for (Filtro f : filtros) {
+                predicados.add(f.toPredicate(cb, root));
+            }
+            cq.where(predicados.toArray(new Predicate[0]));
+        }
+        if (ordens != null && !ordens.isEmpty()) {
+            List<jakarta.persistence.criteria.Order> jpaOrders = new ArrayList<>();
+            for (Ordem o : ordens) {
+                jpaOrders.add(o.toOrder(cb, root));
+            }
+            cq.orderBy(jpaOrders);
+        }
+
+        org.hibernate.query.Query<T> query = session().createQuery(cq);
+        if (offSet >= 0) {
+            query.setFirstResult(offSet);
+        }
+        if (maxResult >= 0) {
+            query.setMaxResults(maxResult);
+        }
+        return query.getResultList();
+    }
+
+    private T firstOrNull(List<T> lista) {
+        return lista.isEmpty() ? null : lista.get(0);
     }
 }

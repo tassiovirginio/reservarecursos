@@ -1,1 +1,1 @@
-screen -dmS demo mvn jetty:start
+screen -dmS demo mise run start

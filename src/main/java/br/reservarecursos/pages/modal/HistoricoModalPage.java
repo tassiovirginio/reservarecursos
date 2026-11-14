@@ -28,8 +28,7 @@ import br.reservarecursos.pages.HorariosPage;
 import br.reservarecursos.pages.componentes.AjaxLinkConfirm;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -47,7 +46,7 @@ import java.util.List;
 /**
  * Created by tassio on 21/01/15.
  */
-public class HistoricoModalPage extends WebPage {
+public class HistoricoModalPage extends Panel {
 
     @SpringBean
     private EmprestimoBusiness emprestimoBusiness;
@@ -57,7 +56,9 @@ public class HistoricoModalPage extends WebPage {
 
     private Emprestimo emprestimo;
 
-    public HistoricoModalPage(final Recurso recurso, final ModalWindow window) {
+    public HistoricoModalPage(String id, final Recurso recurso, final ModalBase window) {
+        super(id);
+
 
         List<Emprestimo> emprestimos = emprestimoBusiness.emprestimosLista(recurso,5);
 

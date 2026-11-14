@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.annotations.parameters.RequestBody;
-import org.wicketstuff.rest.utils.http.HttpMethod;
+import org.wicketstuff.restutils.http.HttpMethod;
 
 import java.util.List;
 

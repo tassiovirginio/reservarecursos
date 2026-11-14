@@ -26,7 +26,7 @@ import br.reservarecursos.entities.Usuario;
 import br.reservarecursos.pages.base.BasePage;
 import br.reservarecursos.pages.modal.EmprestarModal;
 import br.reservarecursos.pages.modal.ReservarModal;
-import com.googlecode.wicket.jquery.ui.markup.html.link.AjaxLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.joda.time.LocalDate;

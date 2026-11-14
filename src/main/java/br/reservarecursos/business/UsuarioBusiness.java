@@ -24,7 +24,7 @@ import br.reservarecursos.business.daos.util.BusinessGeneric;
 import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Usuario;
 import br.reservarecursos.ldap.PersonRepo;
-import org.hibernate.criterion.Order;
+import br.reservarecursos.business.daos.util.Ordem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.hibernate.criterion.Restrictions.eq;
+import static br.reservarecursos.business.daos.util.Filtros.*;
 
 /**
  * Created by tassio on 12/01/15.
@@ -157,12 +157,12 @@ public class UsuarioBusiness extends BusinessGeneric<UsuarioDAO, Usuario> {
     }
 
     public List<Usuario> listOrdemAlfabetica(){
-        return dao.findByCriteria(Order.asc("nome"));
+        return dao.findByCriteria(Ordem.asc("nome"));
     }
 
 
     public List<Usuario> buscarUsuariosPorGrupo(Grupo grupo){
-        return dao.findByCriteria(Order.asc("nome"),
+        return dao.findByCriteria(Ordem.asc("nome"),
                 eq("grupo.id", grupo.getId()));
     }
 

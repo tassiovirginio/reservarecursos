@@ -27,7 +27,9 @@ import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Periodo;
 import br.reservarecursos.entities.Usuario;
 import br.reservarecursos.pages.*;
-import com.googlecode.wicket.kendo.ui.form.TextField;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -92,32 +94,22 @@ public class BasePage extends WebPage {
 
         periodoAtual = periodoBusiness.getPeriodoAtual(grupoSelecionado);
 
-        final DropDownChoice<Grupo> ddcGrupos = new DropDownChoice<Grupo>("grupoSelecionado",new PropertyModel(this, "grupoSelecionado"),grupoList,new ChoiceRenderer<>( "nome", "id" )){
-
-            protected boolean wantOnSelectionChangedNotifications() {
-                return true;
-            }
-
+        final DropDownChoice<Grupo> ddcGrupos = new DropDownChoice<Grupo>("grupoSelecionado",
+                new PropertyModel(this, "grupoSelecionado"), grupoList, new ChoiceRenderer<>("nome", "id"));
+        // No Wicket 9+ os hooks onSelectionChanged/wantOnSelectionChangedNotifications
+        // foram removidos; o equivalente é um behavior AJAX de "change".
+        ddcGrupos.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onSelectionChanged(Grupo grupoSelecionado) {
-                getSession().setAttribute("grupoSelecionado",grupoSelecionado);
-                BasePage.this.get("grupo").setDefaultModelObject(grupoSelecionado.getNome());
-                periodoAtual = periodoBusiness.getPeriodoAtual(grupoSelecionado);
-                if(periodoAtual == null) {
-                    labelPeriodo.setDefaultModelObject("Sem Periodo Cadastrado");
-                }else{
-                    labelPeriodo.setDefaultModelObject(periodoAtual.getObs());
-                }
-                super.onSelectionChanged(grupoSelecionado);
-
-                System.out.println(grupoSelecionado);
-                System.out.println(periodoAtual);
-                System.out.println(this);
-
+            protected void onUpdate(AjaxRequestTarget target) {
+                Grupo grupo = ddcGrupos.getModelObject();
+                getSession().setAttribute("grupoSelecionado", grupo);
+                BasePage.this.get("grupo").setDefaultModelObject(grupo.getNome());
+                periodoAtual = periodoBusiness.getPeriodoAtual(grupo);
+                labelPeriodo.setDefaultModelObject(periodoAtual == null
+                        ? "Sem Periodo Cadastrado" : periodoAtual.getObs());
                 setResponsePage(new MenuPage());
             }
-
-        };
+        });
         add(ddcGrupos);
 
 

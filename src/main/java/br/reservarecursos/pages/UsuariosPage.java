@@ -24,7 +24,7 @@ import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Usuario;
 import br.reservarecursos.pages.base.BasePage;
 import br.reservarecursos.pages.componentes.AjaxLinkConfirm;
-import com.googlecode.wicket.kendo.ui.form.TextField;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;

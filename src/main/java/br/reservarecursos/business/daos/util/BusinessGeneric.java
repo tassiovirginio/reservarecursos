@@ -19,7 +19,7 @@
 
 package br.reservarecursos.business.daos.util;
 
-import org.hibernate.criterion.Order;
+import br.reservarecursos.business.daos.util.Ordem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +52,7 @@ public class BusinessGeneric<T extends DAOGeneric<Y>, Y extends Serializable> {
     }
 
     public List<Y> find(Long first, Long count) {
-        return dao.findByHQL(Order.desc("id"), first.intValue(), count.intValue());
+        return dao.findByHQL(Ordem.desc("id"), first.intValue(), count.intValue());
     }
 
     public Y find(Long id) {

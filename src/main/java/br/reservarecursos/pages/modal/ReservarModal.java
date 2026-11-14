@@ -26,15 +26,15 @@ import br.reservarecursos.pages.VerReservasHojePage;
 import br.reservarecursos.pages.VerReservasPage;
 import br.reservarecursos.pages.VerReservasSemanaPage;
 import br.reservarecursos.pages.base.BasePage;
-import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalDialog;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.joda.time.LocalDate;
 
 /**
  * Created by tassio on 03/12/15.
  */
-public class ReservarModal extends ModalWindow {
+public class ReservarModal extends ModalBase {
 
     public ReservarModal(String id, final Usuario usuario, final Ambiente ambiente,
                          final Horario horario, final LocalDate data, final Integer diaSemana, final BasePage page) {
@@ -44,14 +44,14 @@ public class ReservarModal extends ModalWindow {
         setAutoSize(true);
         setMinimalWidth(300);
         setMinimalHeight(310);
-        setCssClassName(ModalWindow.CSS_CLASS_GRAY);
-        setPageCreator(new ModalWindow.PageCreator() {
+        setCssClassName(ModalBase.CSS_CLASS_GRAY);
+        setPageCreator(new ModalBase.PageCreator() {
             @Override
-            public Page createPage() {
-                return new ReservarModalPage(usuario, ambiente, horario, data, diaSemana, ReservarModal.this);
+            public Panel createContent() {
+                return new ReservarModalPage(ModalDialog.CONTENT_ID, usuario, ambiente, horario, data, diaSemana, ReservarModal.this);
             }
         });
-        setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
+        setWindowClosedCallback(new ModalBase.WindowClosedCallback() {
             @Override
             public void onClose(AjaxRequestTarget target) {
 

@@ -24,16 +24,16 @@ import br.reservarecursos.entities.Recurso;
 import br.reservarecursos.entities.Usuario;
 import br.reservarecursos.pages.*;
 import br.reservarecursos.pages.base.BasePage;
-import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalDialog;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 /**
  * Created by tassio on 03/12/15.
  */
-public class EmprestarModal extends ModalWindow {
+public class EmprestarModal extends ModalBase {
 
     public EmprestarModal(String id, final Usuario usuarioLogado, final Recurso recurso, final BasePage page) {
         super(id);
@@ -42,11 +42,11 @@ public class EmprestarModal extends ModalWindow {
         setAutoSize(true);
         setMinimalWidth(300);
         setMinimalHeight(200);
-        setCssClassName(ModalWindow.CSS_CLASS_GRAY);
+        setCssClassName(ModalBase.CSS_CLASS_GRAY);
         setPageCreator(new PageCreator() {
             @Override
-            public Page createPage() {
-                return new EmprestarModalPage(usuarioLogado, recurso, EmprestarModal.this,page);
+            public Panel createContent() {
+                return new EmprestarModalPage(ModalDialog.CONTENT_ID, usuarioLogado, recurso, EmprestarModal.this,page);
             }
         });
         setWindowClosedCallback(new WindowClosedCallback() {

@@ -26,9 +26,8 @@ import br.reservarecursos.entities.Usuario;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -41,7 +40,7 @@ import org.springframework.mail.SimpleMailMessage;
 /**
  * Created by tassio on 21/01/15.
  */
-public class ReservarModalPage extends WebPage {
+public class ReservarModalPage extends Panel {
 
     @SpringBean
     private ReservaBusiness reservaBusiness;
@@ -51,7 +50,9 @@ public class ReservarModalPage extends WebPage {
 
     private Reserva reserva;
 
-    public ReservarModalPage(final Usuario usuario, final Ambiente ambiente, final Horario horario, final LocalDate data, final Integer diaSemana, final ModalWindow window) {
+    public ReservarModalPage(String id, final Usuario usuario, final Ambiente ambiente, final Horario horario, final LocalDate data, final Integer diaSemana, final ModalBase window) {
+        super(id);
+
 
         reserva = new Reserva();
         reserva.setAmbiente(ambiente);
@@ -80,7 +81,7 @@ public class ReservarModalPage extends WebPage {
 
         final AjaxSubmitLink ajaxSubmitLink = new AjaxSubmitLink("save") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+            protected void onSubmit(AjaxRequestTarget target) {
 
                 //validação
                 if(data != null && data.getDayOfYear() == new LocalDate().getDayOfYear() && reserva.getUrgencia() == false){

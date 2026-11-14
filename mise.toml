@@ -1,27 +1,11 @@
-# Ferramentas do projeto Reserva de Recursos (mise).
-#
-# O pom.xml compila com -source/-target 1.7 e usa um stack de 2015
-# (Wicket 6, Spring 4.2, Hibernate 4.3, Jetty 8, javassist 3.18).
-# - JDK 21 (padrão global) rejeita: "Source option 7 is no longer supported".
-# - JDK 17+ nega o acesso reflexivo do javassist à java.lang.ClassLoader.
-# O JDK 11 é o mais recente que compila e executa tudo sem alterar o pom.xml.
 [tools]
-java = "11"
+java = "21"
 maven = "3.10.0"
 
-[env]
-# Ajustes de JVM/Maven para este stack de 2015 rodar sem ruído no JDK 11:
-# - --add-opens: o javassist 3.18 (Hibernate 4) reflete em java.lang.ClassLoader;
-#   no JDK 11 é permitido, mas abrir o pacote elimina o aviso de acesso reflexivo.
-# - maven.plugin.validation=none: o descritor do jetty-maven-plugin 8 declara
-#   "contextPath" como read-only e o Maven 3.10 avisa. Não há configuração no POM
-#   que resolva isso sem trocar de plugin (o que quebraria o Jetty 8).
-# - DefaultArtifactDescriptorReader=error: o POM do javassist 3.18.1-GA referencia
-#   ${java.home}/../lib/tools.jar, removido no JDK 9+. É um aviso cosmético de
-#   terceiro; atualizar o javassist quebra o Hibernate 4.3 (testado: HHH000142 /
-#   NullPointerException ao criar proxies), então suprimimos apenas este logger.
-MAVEN_OPTS = "--add-opens=java.base/java.lang=ALL-UNNAMED -Dmaven.plugin.validation=none -Dorg.slf4j.simpleLogger.log.org.apache.maven.repository.internal.DefaultArtifactDescriptorReader=error"
+[tasks.compile]
+description = "Spike: compila contra Wicket 11 / Spring 7 / Hibernate 7 / Jetty 12"
+run = "mvn -B test-compile"
 
 [tasks.start]
-description = "Sobe a aplicação no Jetty: http://127.0.0.1:8081 (login admin / senha admin)"
-run = "mvn jetty:run"
+description = "Spike: sobe a app modernizada em http://127.0.0.1:8081 (admin/admin)"
+run = "mvn -B jetty:run"

@@ -24,8 +24,8 @@ import br.reservarecursos.business.daos.util.BusinessGeneric;
 import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Horario;
 import br.reservarecursos.entities.Periodo;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
+import br.reservarecursos.business.daos.util.Filtro;
+import br.reservarecursos.business.daos.util.Ordem;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hibernate.criterion.Restrictions.eq;
+import static br.reservarecursos.business.daos.util.Filtros.*;
 
 /**
  * Created by tassio on 12/01/15.
@@ -44,24 +44,20 @@ import static org.hibernate.criterion.Restrictions.eq;
 public class HorarioBusiness extends BusinessGeneric<HorarioDAO, Horario> {
 
     public List<Horario> getLista(Periodo periodo) {
-        return dao.findByCriteria(Order.asc("horaInicio"), eq("periodo", periodo));
+        return dao.findByCriteria(Ordem.asc("horaInicio"), eq("periodo", periodo));
     }
 
     public List<Horario> getListaHorarios(Grupo grupo){
         if(grupo != null) {
 
 
-            List<Order> listaOrder = new ArrayList<>();
-            listaOrder.add(Order.asc("horaInicio"));
+            List<Ordem> listaOrder = new ArrayList<>();
+            listaOrder.add(Ordem.asc("horaInicio"));
 
-            List<Criterion> listCriteria = new ArrayList<>();
-            listCriteria.add(eq("p.grupo", grupo));
+            List<Filtro> listCriteria = new ArrayList<>();
+            listCriteria.add(eq("periodo.grupo", grupo));
 
-            Map<String,String> listAlias = new HashMap<>();
-
-            listAlias.put("periodo","p");
-
-            return dao.findByCriteria2(listaOrder,listCriteria,listAlias);
+            return dao.findByCriteria(listaOrder, listCriteria);
 
         }else{
             return new ArrayList<>();

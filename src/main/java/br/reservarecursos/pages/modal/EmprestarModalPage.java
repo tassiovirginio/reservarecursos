@@ -26,9 +26,8 @@ import br.reservarecursos.pages.base.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.model.PropertyModel;
@@ -43,7 +42,7 @@ import java.util.List;
 /**
  * Created by tassio on 21/01/15.
  */
-public class EmprestarModalPage extends WebPage {
+public class EmprestarModalPage extends Panel {
 
     @SpringBean
     private EmprestimoBusiness emprestimoBusiness;
@@ -55,7 +54,9 @@ public class EmprestarModalPage extends WebPage {
 
     private String senha;
 
-    public EmprestarModalPage(final Usuario usuarioLogado, final Recurso recurso, final ModalWindow window, final BasePage page) {
+    public EmprestarModalPage(String id, final Usuario usuarioLogado, final Recurso recurso, final ModalBase window, final BasePage page) {
+        super(id);
+
 
         List<Usuario> usuarioList = usuarioBusiness.buscarUsuariosPorGrupo(usuarioLogado.getGrupo());
 
@@ -78,7 +79,7 @@ public class EmprestarModalPage extends WebPage {
 
         final AjaxSubmitLink ajaxSubmitLink = new AjaxSubmitLink("save") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form form) {
+            protected void onSubmit(AjaxRequestTarget target) {
 
                 Usuario usuarioValidar = usuarioBusiness.verificarLogin(emprestimo.getUsuario().getLogin(),senha);
 

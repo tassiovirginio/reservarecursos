@@ -23,14 +23,14 @@ import br.reservarecursos.business.daos.PeriodoDAO;
 import br.reservarecursos.business.daos.util.BusinessGeneric;
 import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Periodo;
-import org.hibernate.criterion.Order;
+import br.reservarecursos.business.daos.util.Ordem;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.hibernate.criterion.Restrictions.*;
+import static br.reservarecursos.business.daos.util.Filtros.*;
 
 /**
  * Created by tassio on 12/01/15.
@@ -53,7 +53,7 @@ public class PeriodoBusiness extends BusinessGeneric<PeriodoDAO, Periodo> {
 
     public List<Periodo> getPeriodos(Grupo grupo) {
         if(grupo != null) {
-            return dao.findByCriteria(Order.asc("obs"),
+            return dao.findByCriteria(Ordem.asc("obs"),
                     eq("grupo.id", grupo.getId())
             );
         }else{
@@ -62,18 +62,15 @@ public class PeriodoBusiness extends BusinessGeneric<PeriodoDAO, Periodo> {
     }
 
     public void save(Periodo u) {
+        // Antes a exceção era engolida pelo catch, deixando a entidade sem salvar
+        // e causando TransientPropertyValueException mais à frente. Propaga.
+        java.util.List<Periodo> lista1 = dao.findByCriteriaReturnList(and(not(eq("id", u.getId())), le("dataInicial", u.getDataInicial()), ge("dataFinal", u.getDataInicial())));
+        java.util.List<Periodo> lista2 = dao.findByCriteriaReturnList(and(not(eq("id", u.getId())), le("dataInicial", u.getDataFinal()), ge("dataFinal", u.getDataFinal())));
 
-        try {
-            List<Periodo> lista1 = dao.findByCriteriaReturnList(and(not(eq("id",u.getId())),le("dataInicial", u.getDataInicial()), ge("dataFinal", u.getDataInicial())));
-            List<Periodo> lista2 = dao.findByCriteriaReturnList(and(not(eq("id",u.getId())),le("dataInicial", u.getDataFinal()), ge("dataFinal", u.getDataFinal())));
-
-            if (lista1.size() == 0 || lista2.size() == 0) {
-                super.save(u);
-            } else {
-                throw new RuntimeException("Não pode salvar Periodo com intersecção com outros periodos.");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        if (lista1.isEmpty() || lista2.isEmpty()) {
+            super.save(u);
+        } else {
+            throw new RuntimeException("Não pode salvar Periodo com intersecção com outros periodos.");
         }
     }
 }

@@ -1,6 +1,8 @@
 package br.reservarecursos.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import jakarta.persistence.Convert;
+import br.reservarecursos.entities.converter.*;
 import java.io.Serializable;
 
 import org.joda.time.*;
@@ -14,7 +16,7 @@ public class Emprestimo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -26,8 +28,10 @@ public class Emprestimo implements Serializable {
     @ManyToOne
     private Recurso recurso;
 
+    @Convert(converter = JodaDateTimeConverter.class)
     private DateTime dataHoraInicio;
 
+    @Convert(converter = JodaDateTimeConverter.class)
     private DateTime dataHoraFim;
 
     public Long getId() {

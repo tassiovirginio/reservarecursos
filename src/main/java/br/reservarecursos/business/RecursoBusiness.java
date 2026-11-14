@@ -23,13 +23,13 @@ import br.reservarecursos.business.daos.RecursoDAO;
 import br.reservarecursos.business.daos.util.BusinessGeneric;
 import br.reservarecursos.entities.Grupo;
 import br.reservarecursos.entities.Recurso;
-import org.hibernate.criterion.Order;
+import br.reservarecursos.business.daos.util.Ordem;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.hibernate.criterion.Restrictions.eq;
+import static br.reservarecursos.business.daos.util.Filtros.*;
 
 /**
  * Created by tassio on 12/01/15.
@@ -39,13 +39,13 @@ import static org.hibernate.criterion.Restrictions.eq;
 public class RecursoBusiness extends BusinessGeneric<RecursoDAO, Recurso> {
 
     public List<Recurso> getAll(Grupo grupo) {
-        return dao.findByCriteria(Order.asc("nome"),
+        return dao.findByCriteria(Ordem.asc("nome"),
                 eq("grupo", grupo)
         );
     }
 
     public List<Recurso> listAtivos(Grupo grupo){
-        return dao.findByCriteria(Order.asc("nome"),
+        return dao.findByCriteria(Ordem.asc("nome"),
                 eq("ativo",Boolean.TRUE),
                 eq("grupo",grupo),
                 eq("manutencao",Boolean.FALSE)
@@ -53,7 +53,7 @@ public class RecursoBusiness extends BusinessGeneric<RecursoDAO, Recurso> {
     }
 
     public List<Recurso> listManutencao(Grupo grupo){
-        return dao.findByCriteria(Order.asc("nome"),
+        return dao.findByCriteria(Ordem.asc("nome"),
                 eq("ativo",Boolean.TRUE),
                 eq("grupo",grupo),
                 eq("manutencao",Boolean.TRUE)
@@ -61,7 +61,7 @@ public class RecursoBusiness extends BusinessGeneric<RecursoDAO, Recurso> {
     }
 
     public List<Recurso> listDesativados(Grupo grupo){
-        return dao.findByCriteria(Order.asc("nome"),
+        return dao.findByCriteria(Ordem.asc("nome"),
                 eq("ativo",Boolean.FALSE),
                 eq("grupo",grupo),
                 eq("manutencao",Boolean.FALSE)

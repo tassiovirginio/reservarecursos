@@ -25,14 +25,13 @@ import br.reservarecursos.ldap.PersonRepo;
 import br.reservarecursos.pages.*;
 import br.reservarecursos.rest.base.PackageScannerSpring;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.time.Duration;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @Component
@@ -78,11 +77,8 @@ public class WicketApplication extends WebApplication {
                 "***                      Carregando o Sistema                    ***\n"+
                 "********************************************************************");
 
-        getResourceSettings().setResourcePollFrequency(Duration.ONE_MINUTE);
 
-        getApplicationSettings().setUploadProgressUpdatesEnabled(true);
 
-        getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
 
@@ -95,7 +91,6 @@ public class WicketApplication extends WebApplication {
         getResourceSettings().setThrowExceptionOnMissingResource(false);
 
         // enable ajax debug etc.
-        getDebugSettings().setDevelopmentUtilitiesEnabled(false);
 
         // make markup friendly as in deployment-mode
         getMarkupSettings().setStripWicketTags(false);
@@ -129,6 +124,12 @@ public class WicketApplication extends WebApplication {
         "********************************************************************\n"+
         "***  Criando o usuário Administrador - login:admin senha:admin   ***\n"+
         "********************************************************************");
+        Grupo grupoPadrao = null;
+        List<Grupo> gruposAtivos = grupoBusiness.getGruposAtivos();
+        if (gruposAtivos != null && !gruposAtivos.isEmpty()) {
+            grupoPadrao = gruposAtivos.get(0);
+        }
+
         Usuario usuarioAdmin = usuarioBusiness.getUsuario("admin");
         if(usuarioAdmin == null) {
             Usuario admin = new Usuario();
@@ -139,6 +140,7 @@ public class WicketApplication extends WebApplication {
             admin.setAdmin(true);
             admin.setAdminGeral(true);
             admin.setAdminEmprestimo(false);
+            admin.setGrupo(grupoPadrao);
             usuarioBusiness.save(admin);
         }
 
@@ -151,6 +153,7 @@ public class WicketApplication extends WebApplication {
             admin.setSenha("21232f297a57a5a743894a0e4a801fc3");
             admin.setAdmin(false);
             admin.setAdminEmprestimo(true);
+            admin.setGrupo(grupoPadrao);
             usuarioBusiness.save(admin);
         }
     }
@@ -191,6 +194,12 @@ public class WicketApplication extends WebApplication {
             grupoDNO.setAdministrador(u1);
             grupoBusiness.save(grupoDNO);
 
+            // Carga original nunca atribuía o grupo aos usuários, o que fazia
+            // as páginas que chamam usuario.getGrupo() quebrarem com banco novo.
+            u1.setGrupo(grupoDNO);
+            usuarioBusiness.save(u1);
+            u2.setGrupo(grupoDNO);
+            usuarioBusiness.save(u2);
 
             Periodo periodo = new Periodo();
             periodo.setDataInicial(new LocalDate().withMonthOfYear(1).withDayOfMonth(1));
