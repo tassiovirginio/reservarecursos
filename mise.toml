@@ -3,9 +3,13 @@ java = "21"
 maven = "3.10.0"
 
 [tasks.compile]
-description = "Spike: compila contra Wicket 11 / Spring 7 / Hibernate 7 / Jetty 12"
+description = "Compila o projeto (Wicket 11 / Spring 7 / Hibernate 7 / Java 21)"
 run = "mvn -B test-compile"
 
 [tasks.start]
-description = "Spike: sobe a app modernizada em http://127.0.0.1:8081 (admin/admin)"
+description = "Sobe a aplicação em http://127.0.0.1:8081 (login admin / senha admin)"
 run = "mvn -B jetty:run"
+
+[tasks.visual-test]
+description = "Bateria de testes visuais: baseline Wicket 6 x stack atual (relatório em target/visual-tests/)"
+run = "bash tests/visual/run.sh"

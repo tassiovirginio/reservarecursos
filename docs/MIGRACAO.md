@@ -54,6 +54,13 @@ Hibernate 4.3, Jetty 8, Java 7/11) por versões GA de 2026.
 `mvn -B jetty:run` → Jetty 12.1.15 na porta 8081; login `admin/admin` e
 10 páginas HTTP 200 com banco novo, sem erros no log.
 
+**Regressão visual versionada:** `mise run visual-test` compara 12 telas
+(11 desktop + 1 mobile) da stack antiga com a atual via Chromium headless e
+falha com exit 1 se houver diferença de pixels, CSS bloqueado ou novos erros.
+Documentação e opções em `tests/visual/README.md`. Primeira execução:
+0,000% de diferença (PNGs idênticos); o controle negativo com CSP bloqueante
+(`VISUAL_CONTROL=1`) acusa 84,259%.
+
 Com o `recursos.db` já versionado, `/ambientes/` e `/horarios/` retornam 500
 porque o usuário `admin` desse banco está com `grupo_id = NULL` — comportamento
 **idêntico na stack antiga** (verificado). As demais 8 páginas respondem 200.
