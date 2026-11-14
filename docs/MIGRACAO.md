@@ -37,6 +37,13 @@ Hibernate 4.3, Jetty 8, Java 7/11) por versões GA de 2026.
 - **Config**: `applicationContext.xml` usa `orm.jpa.hibernate.*`; `web.xml` virou
   Jakarta Servlet 6.1 com `OpenEntityManagerInViewFilter`; `logback.xml` substitui
   `log4j.properties`.
+- **CSP**: o Wicket 11 envia por padrão um `Content-Security-Policy` bloqueante
+  (`default-src 'none'; style-src 'nonce-…'; script-src 'strict-dynamic' 'nonce-…'`).
+  Como os `<link>`/`<script>` do `BasePage.html` não têm nonce, o navegador bloqueava
+  Bootstrap, `BasePage.css` e o jQuery do CDN — a página ficava sem estilo.
+  `WicketApplication.init()` chama `getCspSettings().blocking().disabled()` para
+  preservar o comportamento do Wicket 6. Para religar o CSP, configurar as
+  diretivas `STYLE_SRC`/`SCRIPT_SRC` com `'self'` e as origens externas.
 - **Carga inicial**: corrigido bug antigo em que `dbTeste()`/`criarAdmin()` não
   atribuíam `grupo` aos usuários (quebrava as telas autenticadas com banco novo).
 - `EmbeddedJettyServer` (classe morta, API Jetty 8) removido.
@@ -45,7 +52,11 @@ Hibernate 4.3, Jetty 8, Java 7/11) por versões GA de 2026.
 
 `mvn -B test-compile` → BUILD SUCCESS (0 erros).
 `mvn -B jetty:run` → Jetty 12.1.15 na porta 8081; login `admin/admin` e
-10 páginas HTTP 200, sem erros no log.
+10 páginas HTTP 200 com banco novo, sem erros no log.
+
+Com o `recursos.db` já versionado, `/ambientes/` e `/horarios/` retornam 500
+porque o usuário `admin` desse banco está com `grupo_id = NULL` — comportamento
+**idêntico na stack antiga** (verificado). As demais 8 páginas respondem 200.
 
 ## Pendências conhecidas
 

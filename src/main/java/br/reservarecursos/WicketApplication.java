@@ -82,6 +82,15 @@ public class WicketApplication extends WebApplication {
 
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
 
+        // O Wicket 11 passa a enviar um Content-Security-Policy BLOQUEANTE por
+        // padrao (default-src 'none'; style-src 'nonce-...'; script-src
+        // 'strict-dynamic' 'nonce-...'). Como os <link> e <script> desta aplicacao
+        // nao tem nonce, o navegador bloqueia Bootstrap, BasePage.css e o jQuery
+        // do CDN: a pagina fica sem estilo. O Wicket 6 nao enviava CSP.
+        // Desativamos o modo bloqueante para preservar o comportamento anterior.
+        // Para religar, configurar as diretivas STYLE_SRC/SCRIPT_SRC em vez de disabled().
+        getCspSettings().blocking().disabled();
+
         getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
 
