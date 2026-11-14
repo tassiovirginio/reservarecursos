@@ -60,14 +60,9 @@ public class PackageScannerSpring {
     public void scanPackage(WebApplication application, String... packageNames) {
         Args.notNull(application, "application");
         Args.notNull(packageNames, "packageNames");
-        String[] arr$ = packageNames;
-        int len$ = packageNames.length;
-
-        for (int i$ = 0; i$ < len$; ++i$) {
-            String packageName = arr$[i$];
+        for (String packageName : packageNames) {
             scanPackage(application, packageName);
         }
-
     }
 
     public void scanPackage(WebApplication application, String packageName) {
@@ -75,17 +70,11 @@ public class PackageScannerSpring {
         Args.notNull(packageName, "packageName");
 
         try {
-            Class[] exception = getClasses(packageName);
-            Class[] arr$ = exception;
-            int len$ = exception.length;
-
-            for (int i$ = 0; i$ < len$; ++i$) {
-                Class clazz = arr$[i$];
+            for (Class<?> clazz : getClasses(packageName)) {
                 mountAnnotatedResource(application, clazz);
             }
-
-        } catch (Exception var7) {
-            throw new WicketRuntimeException(var7);
+        } catch (Exception e) {
+            throw new WicketRuntimeException(e);
         }
     }
 
@@ -107,70 +96,57 @@ public class PackageScannerSpring {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Args.notNull(classLoader, "classLoader");
         String path = packageName.replace('.', '/');
-        Enumeration resources = classLoader.getResources(path);
-        ArrayList dirs = new ArrayList();
-        ArrayList jars = new ArrayList();
+        Enumeration<URL> resources = classLoader.getResources(path);
+        List<File> dirs = new ArrayList<File>();
+        List<JarFile> jars = new ArrayList<JarFile>();
 
-        while (true) {
-            while (resources.hasMoreElements()) {
-                URL classes = (URL) resources.nextElement();
-                String i$ = classes.getProtocol();
-                if (!"jar".equals(i$) && !"wsjar".equals(i$)) {
-                    dirs.add(new File(classes.getFile()));
-                } else {
-                    String jarFile = URLDecoder.decode(classes.getFile(), "UTF-8");
-                    jarFile = jarFile.substring(5, jarFile.indexOf("!"));
-                    jars.add(new JarFile(jarFile));
-                }
+        while (resources.hasMoreElements()) {
+            URL url = resources.nextElement();
+            String protocol = url.getProtocol();
+            if (!"jar".equals(protocol) && !"wsjar".equals(protocol)) {
+                dirs.add(new File(url.getFile()));
+            } else {
+                String jarFile = URLDecoder.decode(url.getFile(), "UTF-8");
+                jarFile = jarFile.substring(5, jarFile.indexOf("!"));
+                jars.add(new JarFile(jarFile));
             }
-
-            ArrayList classes1 = new ArrayList();
-            Iterator i$1 = dirs.iterator();
-
-            while (i$1.hasNext()) {
-                File jarFile1 = (File) i$1.next();
-                classes1.addAll(findClasses(jarFile1, packageName));
-            }
-
-            i$1 = jars.iterator();
-
-            while (i$1.hasNext()) {
-                JarFile jarFile2 = (JarFile) i$1.next();
-                classes1.addAll(findClasses(jarFile2, path));
-            }
-
-            return (Class[]) classes1.toArray(new Class[classes1.size()]);
         }
+
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+        for (File dir : dirs) {
+            classes.addAll(findClasses(dir, packageName));
+        }
+        for (JarFile jar : jars) {
+            classes.addAll(findClasses(jar, path));
+        }
+        return classes.toArray(new Class<?>[classes.size()]);
     }
 
     private List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        ArrayList classes = new ArrayList();
+        List<Class<?>> classes = new ArrayList<Class<?>>();
         if (!directory.exists()) {
             return classes;
-        } else {
-            File[] files = directory.listFiles();
-            File[] arr$ = files;
-            int len$ = files.length;
-
-            for (int i$ = 0; i$ < len$; ++i$) {
-                File file = arr$[i$];
-                if (file.isDirectory()) {
-                    classes.addAll(findClasses(file, packageName + "." + file.getName()));
-                } else if (file.getName().endsWith(".class")) {
-                    classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
-                }
-            }
-
+        }
+        File[] files = directory.listFiles();
+        if (files == null) {
             return classes;
         }
+        for (File file : files) {
+            if (file.isDirectory()) {
+                classes.addAll(findClasses(file, packageName + "." + file.getName()));
+            } else if (file.getName().endsWith(".class")) {
+                classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+            }
+        }
+        return classes;
     }
 
-    private Collection<? extends Class<?>> findClasses(JarFile jarFile, String path) throws ClassNotFoundException {
-        ArrayList classes = new ArrayList();
-        Enumeration jarEntries = jarFile.entries();
+    private List<Class<?>> findClasses(JarFile jarFile, String path) throws ClassNotFoundException {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+        Enumeration<? extends JarEntry> jarEntries = jarFile.entries();
 
         while (jarEntries.hasMoreElements()) {
-            JarEntry jarEntry = (JarEntry) jarEntries.nextElement();
+            JarEntry jarEntry = jarEntries.nextElement();
             String entryName = jarEntry.getName();
             int classExtensionIndex = entryName.indexOf(".class");
             if (entryName.startsWith(path) && classExtensionIndex >= 0) {
@@ -179,7 +155,6 @@ public class PackageScannerSpring {
                 classes.add(Class.forName(entryName));
             }
         }
-
         return classes;
     }
 

@@ -2,7 +2,6 @@ package br.reservarecursos.ldap;
 
 import br.reservarecursos.entities.Usuario;
 import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
@@ -102,7 +101,9 @@ public class PersonRepo {
                 .and(new EqualsFilter("objectclass", "person"))
                 .and(new EqualsFilter("cn", username));
 
-        return ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH, filter.toString(), password);
+        // Spring LDAP 2.1: DistinguishedName está deprecado; a sobrecarga com
+        // String para a base vazia mantém o mesmo comportamento (sem deslocamento).
+        return ldapTemplate.authenticate("", filter.toString(), password);
     }
 
 }

@@ -43,6 +43,25 @@
 		<quartz.version>2.2.1</quartz.version>
 	</properties>
 
+	<!--
+	  O POM do spring-data-commons 1.13 declara os repositórios Spring, que hoje
+	  exigem autenticação (HTTP 401) quando o Maven consulta os prefixos de plugins.
+	  Todos os artefatos usados estão no Central, então redeclaramos os mesmos ids
+	  apontando para o Central e eliminamos as consultas inúteis.
+	-->
+	<repositories>
+		<repository>
+			<id>spring-libs-release</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+		<repository>
+			<id>spring-libs-snapshot</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- Java Mail API -->
@@ -356,19 +375,7 @@
 	</dependencies>
 
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>apache.snapshots</id>
-            <name>Apache Snapshots</name>
-            <url>http://repository.apache.org/content/groups/snapshots-group/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+	<!-- pluginRepositories HTTP (apache.snapshots) removido: o Maven 3.10 bloqueia repositórios HTTP. -->
 
 
 	<build>
@@ -411,9 +418,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.0.0</version>
-				<configuration>
-					<webappDirectory>/home/dianopolis/apache-tomcat-8.5.12/webapps/${artifactId}</webappDirectory>
-				</configuration>
 			</plugin>
 
             <plugin>
@@ -426,12 +430,16 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.16.0</version>
 				<configuration>
 					<source>${source.version}</source>
 					<target>${source.version}</target>
-					<optimize>true</optimize>
 					<debug>true</debug>
 					<encoding>utf-8</encoding>
+					<!-- -source 7 no JDK 11 sempre avisa sobre o bootclasspath; é apenas ruído de opções. -->
+					<compilerArgs>
+						<arg>-Xlint:-options</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 
@@ -440,6 +448,9 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
+					<!-- Evita o aviso espúrio "webAppSourceDirectory does not exist" do Jetty 8
+					     (o valor default ${maven.war.src} não é definido neste POM). -->
+					<webAppSourceDirectory>${project.basedir}/src/main/webapp</webAppSourceDirectory>
 					<scanIntervalSeconds>10</scanIntervalSeconds>
 					<stopKey>foo</stopKey>
 					<stopPort>9999</stopPort>
@@ -503,6 +514,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.6.2</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
