@@ -1,5 +1,10 @@
 # Specs do Reserva de Recursos
 
+> **Nota (14/11/2026):** esta é a linha de base **pré-migração** (WAR / Wicket 6 /
+> Spring 4 / Hibernate 4 / Jetty 8 / Java 1.7). A stack atual é Spring Boot 4.1.2 /
+> Wicket 11 / Java 21 com suíte de testes automatizados. Veja `AGENTS.md`,
+> `docs/MIGRACAO.md` e `docs/SPRING-BOOT.md` antes de usar estes documentos.
+
 Esta pasta registra o comportamento conhecido do sistema e os requisitos de mudanças futuras. Os documentos descrevem o código observado; não são garantia de que a aplicação foi executada ou de que todo comportamento em produção foi confirmado.
 
 ## Documentos

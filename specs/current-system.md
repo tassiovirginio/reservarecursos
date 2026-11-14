@@ -1,5 +1,10 @@
 # Linha de base: sistema atual
 
+> **Nota (14/11/2026):** linha de base **pré-migração**. A arquitetura atual é
+> Spring Boot 4.1.2 / JAR / Tomcat 11 / Wicket 11 / Java 21, com suíte de testes
+> automatizados. Consulte `docs/MIGRACAO.md` e `docs/SPRING-BOOT.md`; os fatos
+> abaixo devem ser confirmados contra o código antes de qualquer alteração.
+
 **Status:** levantamento inicial derivado dos arquivos da branch `master` consultados em 14/11/2026. Não é uma validação em execução. Onde o código não permite concluir o comportamento, o item aparece como ponto a confirmar.
 
 ## Propósito observado

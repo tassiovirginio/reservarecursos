@@ -1,5 +1,20 @@
 # Instruções para agentes de código
 
+> **Estado atual (14/11/2026, pós-migrações)** — A "linha de base" abaixo foi
+> escrita **antes** das migrações e está desatualizada quanto à stack. Hoje o
+> projeto é **Spring Boot 4.1.2 / JAR executável / Tomcat 11 embarcado**, com
+> Wicket 11.0.0, Spring 7.0.10, Hibernate 7.4.15, **Java 21** e Jakarta
+> Servlet 6.1.
+>
+> - Rodar: `mise run start` (`mvn spring-boot:run`), porta 8081.
+>   `mvn jetty:run` / `jetty:stop` **não existem mais**.
+> - Testes: **existem e funcionam** — `mise run test` (6 testes JUnit) e
+>   `mise run visual-test` (13/13 rotas, 4 interações, gate de CI).
+> - Documentação vigente: `README.md`, `docs/MIGRACAO.md`,
+>   `docs/SPRING-BOOT.md`, `tests/visual/README.md`.
+> - `AGENTS.md`, `specs/README.md` e `specs/current-system.md` registram a
+>   linha de base histórica: confirme sempre contra o código antes de agir.
+
 ## Objetivo
 Manter e evoluir o Reserva de Recursos em mudanças pequenas, compreensíveis e verificáveis. Este arquivo orienta o trabalho no repositório; não substitui requisitos aprovados nem validação humana.
 
