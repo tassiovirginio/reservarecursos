@@ -3,27 +3,30 @@ Manual de Instalação do Sistema de Reserva de Recursos
 Esse manual foi elabora em passos, seguindo de acordo no final terá o sistema rodando.
 
 1 – O sistema precisa da plataforma Java na versão 21 (OpenJDK 21 ou equivalente).
-O pom.xml usa maven.compiler.release=21 e a stack atual (Wicket 11, Spring 7,
-Hibernate 7, Jetty 12) exige Jakarta EE / Java 21. O arquivo mise.toml do projeto
-já fixa o Java 21 e o Maven 3.10.0; com o mise (https://mise.jdx.dev) instalado,
-basta rodar "mise install" dentro da pasta do projeto.
+A aplicação é um JAR executável Spring Boot 4.1.2 com Tomcat embarcado e usa
+Jakarta Servlet 6.1 / Wicket 11 / Spring 7 / Hibernate 7. O arquivo mise.toml
+do projeto já fixa o Java 21 e o Maven 3.10.0; com o mise
+(https://mise.jdx.dev) instalado, basta rodar "mise install" dentro da pasta.
 
 2 – Será necessário o Apache Maven 3.x, que pode ser obtido no site
-https://maven.apache.org/, podendo ser instalada a versão 3 e posteriores.
-Instruções para sua instalação estão na página:
-https://maven.apache.org/install.html.
+https://maven.apache.org/. Instruções em https://maven.apache.org/install.html.
 
 3 – Baixe o código fonte do Sistema de Reserva de Recursos, descompacte,
 na pasta gerada pela descompressão execute o seguinte comando:
 
-mvn jetty:run
+mvn spring-boot:run
 
-(ou "mise run", que usa a task start com o Java e o Maven corretos).
+(ou "mise run", que usa a task start; ou gere o JAR com
+ "mvn -DskipTests package" e execute "java -jar target/reservarecursos-1.0-SNAPSHOT.jar").
 
-O sistema irá baixar todas as bibliotecas necessárias a sua execução e criar o
-banco SQLite (recursos.db) com os dados de teste na primeira execução.
-Após o termino do download e da carga do sistema, acesse do navegador de sua
-preferencia a url: http://127.0.0.1:8081.
+O sistema irá baixar todas as bibliotecas necessárias, criar o banco SQLite
+(recursos.db) com os dados de teste na primeira execução e subir o Tomcat na
+porta 8081. Após a carga do sistema, acesse no navegador:
+
+http://127.0.0.1:8081
+
+Para trocar a porta: --server.port=OUTRA (ou server.port em application.properties).
+Para parar: Ctrl+C.
 
 Parabéns, o Sistema de Reserva de Recursos esta funcionando, e pode ser acessado pelo
 login de administrador.

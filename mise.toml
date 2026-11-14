@@ -7,8 +7,12 @@ description = "Compila o projeto (Wicket 11 / Spring 7 / Hibernate 7 / Java 21)"
 run = "mvn -B test-compile"
 
 [tasks.start]
-description = "Sobe a aplicação em http://127.0.0.1:8081 (login admin / senha admin)"
-run = "mvn -B jetty:run"
+description = "Sobe a aplicação Spring Boot em http://127.0.0.1:8081 (admin/admin)"
+run = "mvn -B spring-boot:run"
+
+[tasks."boot-jar"]
+description = "Gera e executa o JAR executável (target/reservarecursos-1.0-SNAPSHOT.jar)"
+run = "mvn -B -DskipTests package && java -jar target/reservarecursos-1.0-SNAPSHOT.jar"
 
 [tasks.test]
 description = "Suite JUnit de integração (DAOGeneric, PeriodoBusiness, UsuarioBusiness)"

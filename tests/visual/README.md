@@ -8,6 +8,8 @@ Duas camadas complementares:
 | `mise run visual-test` | 15 capturas (13/13 rotas) + 4 interações, comparadas com o baseline Wicket 6 | 0/1/2 |
 
 Ambas são próprias para CI. Saídas ficam em `target/` (já ignorado).
+A stack atual é **Spring Boot 4.1.2** (JAR/Tomcat); o baseline `4788022` e o
+controle negativo `278e804` são WAR/Jetty — o harness lida com os dois modos.
 
 ## 1. Cobertura de telas: 13/13
 

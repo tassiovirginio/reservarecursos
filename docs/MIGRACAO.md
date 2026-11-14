@@ -88,9 +88,19 @@ porque o usuário `admin` desse banco está com `grupo_id = NULL` — comportame
 3. LDAP e agendamento Quartz simplificados (Spring 7 removeu o suporte a Quartz).
    Para reativar: bean `LdapTemplate` (spring-ldap 4) e `@Scheduled`.
 4. `ModalBase` é um adaptador: os setters de layout são no-ops e o conteúdo é
-   `Panel` (não mais `Page` em iframe). Revisar CSS dos modais.
+   `Panel` (não mais `Page` em iframe). O CSS do `ModalDialog` foi adicionado em
+   `css/BasePage.css` e os markups convertidos para `<wicket:panel>`.
 5. Acesso direto a `/reservashoje/`, `/reservasfixas/`, `/reservassemana/` falha
-   (páginas montadas exigem construtor com `Ambiente`); navegação interna funciona.
-6. Ainda não há testes automatizados — a validação foi smoke HTTP manual.
-7. Para produção, trocar `DriverManagerDataSource` por HikariCP com
+   (exigem construtor com `Ambiente`); a suíte visual as cobre por navegação
+   interna via links do `MenuPage`.
+6. Para produção, trocar `DriverManagerDataSource` por HikariCP com
    `maximumPoolSize=1` em SQLite (ou pool normal em PostgreSQL/MySQL).
+
+## Etapa seguinte: Spring Boot
+
+A aplicação foi convertida em **JAR executável Spring Boot 4.1.2** com Tomcat
+embarcado, substituindo `web.xml`, `applicationContext.xml` e o Jetty externo.
+Os comandos `mvn jetty:run` / `mvn jetty:stop` desta seção são **históricos**
+(etapa WAR); o run atual é `mise run start` (`mvn spring-boot:run`). Detalhes em
+`docs/SPRING-BOOT.md`. A suíte de testes (`mise run test`, `mise run
+visual-test`) foi preservada e detecta automaticamente o modo Boot.

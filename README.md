@@ -15,27 +15,31 @@ Copyright 2015 - Tássio Guerreiro Antunes Virgínio
 * Banco de Dados (SQLite por padrão; MySQL, Postgres, Derby entre outros)
 
 3 - Stack atual
+* **Spring Boot 4.1.2** (Tomcat 11 embarcado, Jakarta Servlet 6.1, JAR executável)
 * Wicket 11.0.0 · Spring Framework 7.0.10 · Hibernate 7.4.15.Final
-* Jetty 12.1.15 (`jetty-ee11-maven-plugin`) · Jakarta Servlet 6.1
 * Logback · dialeto SQLite de `hibernate-community-dialects`
-* Histórico da migração a partir do Wicket 6 / Spring 4 / Hibernate 4 / Jetty 8:
-  `docs/MIGRACAO.md`
+* Histórico: `docs/MIGRACAO.md` (Wicket 6 → 11) e `docs/SPRING-BOOT.md`
+  (WAR/Jetty → Spring Boot)
 
 4 - Instalarção/Run
 * git clone https://github.com/tassiovirginio/reservarecursos.git
 * cd reservarecursos
 * mise install   # instala Java 21 e Maven 3.10.0, se necessário
-* mise run       # mesma coisa que: mvn jetty:run
+* mise run       # sobe a aplicação (mvn spring-boot:run)
 
-  Sem o mise, use um JDK 21 e execute `mvn jetty:run` diretamente.
+  Outras formas:
+  * `mvn spring-boot:run`
+  * `mvn -DskipTests package && java -jar target/reservarecursos-1.0-SNAPSHOT.jar`
+  * `mise run boot-jar` (empacota e executa o JAR)
 
 5 - Acesso após a instalação:
 * <http://127.0.0.1:8081>
 * login: admin
 * senha: admin
 
-O servidor é o Jetty 12 na porta 8081 (configurada no `pom.xml`).
-Para parar: Ctrl+C, ou `mvn jetty:stop` em outro terminal.
+A porta vem de `server.port` em `application.properties` e pode ser sobrescrita
+com `--server.port=OUTRA`. O banco `recursos.db` é criado na primeira execução.
+Para parar: `Ctrl+C` (não há mais `jetty:stop`).
 
 6 - Testes automatizados
 * `mise run test` — 6 testes JUnit de integração (DAO, regras de negócio,

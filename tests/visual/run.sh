@@ -83,17 +83,27 @@ done
 # ---------- servidores + captura ----------
 start_server() {
   local dir="$1" name="$2" slog="$OUT/server-$name.log"
-  log "subindo $name em $BASE_URL"
-  (cd "$dir" && rm -f recursos.db && mise exec -- mvn -B jetty:run > "$slog" 2>&1) &
+  local ready
+  # Detecta automaticamente se o checkout é Spring Boot (JAR) ou WAR/Jetty.
+  if grep -q 'spring-boot-maven-plugin' "$dir/pom.xml" 2>/dev/null; then
+    ready='Started ReservaRecursosApplication'
+    log "subindo $name (Spring Boot) em $BASE_URL"
+    (cd "$dir" && rm -f recursos.db && mise exec -- mvn -B spring-boot:run \
+        "-Dspring-boot.run.arguments=--server.port=$PORT" > "$slog" 2>&1) &
+  else
+    ready='Started Jetty Server|Started oejs.Server'
+    log "subindo $name (Jetty) em $BASE_URL"
+    (cd "$dir" && rm -f recursos.db && mise exec -- mvn -B jetty:run > "$slog" 2>&1) &
+  fi
   SRV_PID=$!
-  for _ in $(seq 1 120); do
-    grep -qE 'Started Jetty Server|Started oejs.Server' "$slog" 2>/dev/null && break
+  for _ in $(seq 1 180); do
+    grep -qE "$ready" "$slog" 2>/dev/null && break
     kill -0 "$SRV_PID" 2>/dev/null || break
     sleep 1
   done
   sleep 4
-  if ! grep -qE 'Started Jetty Server|Started oejs.Server' "$slog" 2>/dev/null; then
-    log "ERRO: $name não subiu. Últimas linhas:"; tail -20 "$slog"; return 1
+  if ! grep -qE "$ready" "$slog" 2>/dev/null; then
+    log "ERRO: $name não subiu. Últimas linhas:"; tail -25 "$slog"; return 1
   fi
   # Equaliza o dado de teste: a carga antiga não atribuía grupo aos usuários.
   python3 -c "
